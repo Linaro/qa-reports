@@ -1,0 +1,42 @@
+<hr />
+
+<div class="panel panel-default" ng-repeat="(name, test) in data.results"
+     ng-class="cssStatusClass(test)">
+  <div class="panel-heading">
+
+    {{ test.metadata.description }}
+
+    <div class="btn-group pull-right" role="group">
+      <div class="btn-group btn-group-sm" role="group">
+      	<button type="button" class="btn btn-success"
+      		ng-class="{'active': test.status == 'pass'}"
+      		ng-click="setStatus(test, 'pass')">Pass</button>
+      </div>
+      <div class="btn-group btn-group-sm" role="group">
+      	<button type="button" class="btn btn-warning"
+      		ng-class="{'active': test.status == 'skip'}"
+      		ng-click="setStatus(test, 'skip')">Skip</button>
+      </div>
+      <div class="btn-group btn-group-sm" role="group">
+      	<button type="button" class="btn btn-danger"
+      		ng-class="{'active': test.status == 'fail'}"
+      		ng-click="setStatus(test, 'fail')">Fail</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <ol>
+      <li ng-repeat="step in test.steps">{{ step }}</li>
+    </ol>
+
+    <hr/>
+    <ol>
+      <li ng-repeat="step in test.expected">{{ step }}</li>
+    </ol>
+  </div>
+</div>
+<div class="progress bottom">
+  <div class="progress-bar progress-bar-success" ng-style="progress.pass"></div>
+  <div class="progress-bar progress-bar-warning" ng-style="progress.skip"></div>
+  <div class="progress-bar progress-bar-danger" ng-style="progress.fail"></div>
+</div>

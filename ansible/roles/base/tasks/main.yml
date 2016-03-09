@@ -1,0 +1,25 @@
+- name: Install base system packages
+  apt: pkg={{item}} state=installed update-cache=yes
+  with_items:
+    - python-dev
+    - libffi-dev 
+    - libssl-dev
+    - git
+  tags:
+    - install
+    - update
+
+- name: install - directories
+  file: path={{item}}
+        owner={{apache_user}}
+        group={{apache_user}}
+        mode=0755
+        state=directory
+  with_items:
+    - "{{ install_base }}"
+    - "{{ project_base }}"
+    - "{{ static_base }}"
+    - "{{ logs_base }}"
+    - "{{ supervisor_base }}"
+    - "{{ ext_base }}"
+    

@@ -1,0 +1,4 @@
+sudo apt-get install
+- libssl-dev
+- python-dev
+- libffi-dev

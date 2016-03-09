@@ -1,0 +1,73 @@
+- name: global pip packages
+  pip: name={{item}} extra_args="-U"
+
+  with_items:
+    - pip
+    - virtualenv
+
+  tags:
+    - install
+    - update
+
+- name: checkout code
+  git: repo={{git_repo}}
+       dest={{install_base}}/project
+       version={{git_branch}}
+       update=yes
+       ssh_opts="-o StrictHostKeyChecking=no"
+  sudo_user: "{{apache_user}}"
+  tags:
+    - install
+    - update
+    - django
+  notify:
+    - restart-apache
+
+- name: install project dependencies
+  sudo_user: "{{apache_user}}"
+  pip: requirements={{install_base}}/project/requirements.txt
+       virtualenv={{install_base}}/.virtualenv
+  tags:
+    - install
+    - update
+
+- name: copy wsgi file
+  sudo_user: "{{apache_user}}"
+  template: src={{project_wsgi}}
+            dest={{install_base}}/wsgi.py
+            owner={{apache_user}} group={{apache_user}} mode=0755
+  tags:
+    - install
+    - update
+    - django
+
+- name: copy private settings
+  sudo_user: "{{apache_user}}"
+  template: src={{project_settings}}
+            dest={{project_base}}/reports/settings/private.py
+            owner={{apache_user}} group={{apache_user}} mode=0755
+  tags:
+    - install
+    - update
+    - django
+
+- name: Run migrations
+  sudo_user: "{{apache_user}}"
+  django_manage: app_path={{ project_base }}
+                 virtualenv={{install_base}}/.virtualenv
+                 command="migrate --noinput"
+
+  tags:
+    - django
+    - update
+
+- name: collect statics
+  sudo_user: "{{apache_user}}"
+  django_manage: app_path={{ project_base }}
+                 virtualenv={{install_base}}/.virtualenv
+                 command="collectstatic --noinput"
+
+  tags:
+    - django
+    - update
+    

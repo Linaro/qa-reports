@@ -1,0 +1,285 @@
+a:hover {
+	color: #cccccc;
+	text-decoration: none;
+}
+
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.navbar-brand {
+	font-family: 'Inconsolata';
+	color: #eee;
+}
+
+.navbar-brand i {
+	vertical-align: middle;
+}
+
+table {
+	tr {
+		cursor: pointer;
+	}
+}
+
+.view {
+	padding: 40px 0 400px 0;
+	h1, h2, h3, h4, h5 {
+		small {
+			display: inline-block;
+			margin-right: 10px;
+			min-width: 80px;
+			text-align: right;
+		}
+	}
+}
+
+.search {
+	position: relative;
+	.counter {
+		align-items: center;
+		background: #dddddd;
+		display: flex;
+		font-weight: 700;
+		height: 36px;
+		justify-content: center;
+		position: absolute;
+		right: 0px;
+		width: 70px;
+	}
+}
+
+#login {
+	max-width: 600px;
+	text-align: center;
+	margin: 50px auto;
+	form {
+	}
+}
+
+#test-execution-detail {
+
+	.tests {
+		background-color: #f5f5f5;
+		margin-bottom: 10px;
+		border: 1px solid #ccc;
+
+		.heading {
+			font-size: 14px;
+			padding: 6px 15px;
+		}
+		.form {
+			margin-bottom: 0px;
+			.btn {
+				height: 34px;
+				margin-right: -1px;
+				border: none;
+			}
+			select.input-sm {
+				height: 34px;
+				line-height: 15px;
+				padding: 0 15px;
+				border: none;
+				border-left: 1px solid #ccc;
+			}
+		}
+
+		.details {
+			background-color: #fff;
+			border-top: 1px solid #ccc;
+			.testjob {
+				&:not(:last-child) {
+					border-bottom: 1px solid #ccc;
+				}
+				.heading {
+					line-height: 27px;
+					font-size: 12px;
+					padding: 7px 15px 7px 15px;
+					font-weight: 400;
+					&.active {
+						font-weight: 600;
+						border-right: 2px solid #D69292;
+						border-left: 2px solid #D69292;
+					}
+					&:hover {
+						background: #FaFaFa;
+						cursor: pointer;
+					}
+				}
+				.results {
+					border-right: 2px solid #D69292;
+					border-left: 2px solid #D69292;
+					border-top: 1px solid #dddddd;
+					.table {
+						margin-bottom: 0;
+						border-top: 1px solid #dddddd;
+						tr:first-child td{
+							border-top: hidden;
+						}
+					}
+				}
+			}
+		}
+
+	}
+}
+
+
+.testmanual {
+	border: 0;
+	margin-bottom: 0;
+
+	&.show {
+		border-right: 2px solid #D69292;
+	}
+	.panel-body {
+		display: -ms-flex;
+		display: -webkit-flex;
+		display: flex;
+		padding: 0;
+	}
+	.steps {
+		background: #FAFAFA;
+		font-family: Inconsolata;
+		font-weight: 700;
+		padding: 10px;
+		width: 70%;
+	}
+	.metadata {
+		padding: 10px;
+		width: 30%;
+	}
+	dl {
+		margin-bottom: 10px;
+	}
+	.btn.show {
+		margin-left: 7px;
+	}
+	.btn.star {
+		margin-right: 7px;
+	}
+}
+
+.definition {
+	.panel-heading {
+		&:hover {
+			background: white;
+			cursor: pointer;
+		}
+	}
+	.panel-body {
+		padding: 0;
+	}
+	pre {
+		border: 0;
+		margin: 0;
+	}
+}
+
+#test-job-list {
+	table {
+		.fa-thumbs-up {
+			color: green;
+		}
+		.fa-thumbs-down {
+			color: red;
+		}
+	}
+}
+
+#test-job-detail {
+	.attributes {
+		display: flex;
+		justify-content: space-between;
+		.notes {
+			width: 50%;
+			position: relative;
+			p {
+				text-align: left;
+				font-size: 12px;
+			}
+			button {
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+			textarea {
+				font-size: 12px;
+				height: 200px;
+				box-sizing: border-box;
+			}
+		}
+	}
+
+	.panel {
+		.panel-heading {
+			padding: 0px 0px 0px 10px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.panel-body {
+		   	font-family: 'Inconsolata';
+			li {
+				margin-bottom: 8px;
+			}
+		}
+	}
+
+	pre.definition {
+		font-family: 'Inconsolata';
+		font-size:12px;
+	}
+
+	.progress {
+		padding: 0px;
+	}
+	.progress.bottom {
+		padding: 0px;
+		position: fixed;
+		left: 50%;
+		bottom: -44px;
+		height: 20px;
+		width: 100%;
+		z-index: 100;
+		transform: translate(-50%, -50%);
+	}
+}
+
+#test-plan-detail {
+	.panel {
+		margin-bottom: 0;
+		border-bottom: none;
+		.panel-heading {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: none;
+		}
+		.panel-body {
+		   	font-family: 'Inconsolata';
+			ol {
+				padding-left: 25px;
+				li {
+					margin-bottom: 8px;
+				}
+			}
+		}
+	}
+}
+
+#404 {
+	background: red;
+}
+
+.loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	i {
+		font-size: 60px;
+		color: #ccc;
+	}
+}

@@ -1,0 +1,17 @@
+<hr>
+
+<table class="table">
+  <tbody>
+    <tr ng-repeat="result in data.results">
+      <td>{{ result.name }}</td>
+      <td class="text-right">
+	{{ result.data.measurement }} {{ result.data.units }}
+      </td>
+      <td class="text-right">
+	{{ result.status }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<pre class="definition" ng-show="data.run_definition">{{ data.run_definition.data | json }}</pre>

@@ -1,0 +1,38 @@
+- name: setup postgresql apt
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
+
+- name: setup postgresql apt key
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: Install packages
+  apt: pkg={{item}} state=installed update-cache=yes
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+  tags:
+    - install
+    - update
+
+- name: Enable postgres to listen on local interface
+  lineinfile: dest=/etc/postgresql/9.5/main/postgresql.conf
+              regexp="^listen_addresses"
+              insertafter="^#listen_addresses"
+              line="listen_addresses = 'localhost'"
+  notify:
+    - restart-postgres
+
+- name: Create postgres user
+  sudo_user: postgres
+  postgresql_user: user={{db_user}}
+                   password={{db_password}}
+                   role_attr_flags=CREATEDB,NOSUPERUSER
+  tags:
+    - database
+
+- name: Create postgres database
+  sudo_user: postgres
+  postgresql_db: name={{db_name}}
+                 owner={{db_user}}
+  tags:
+    - database

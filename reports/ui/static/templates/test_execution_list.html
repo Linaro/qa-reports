@@ -1,0 +1,47 @@
+<div ng-hide="loaded" class="loading"><i class="fa fa-cog fa-spin"></i></div>
+<div ng-show="loaded" class="view" id="test-execution-list" >
+  <div class="page-header">
+    <h3>Executions</h3>
+  </div>
+
+  <form class="form search">
+    <div class="form-group">
+      <div class="counter" ng-if="search">{{ page.count }}</div>
+      <input type="text" class="form-control input-sm" ng-model="search"
+	     ng-change="makeSearch()" placeholder="search, min 2 chars">
+    </div>
+  </form>
+
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+	<th>build</th>
+	<th>board</th>
+	<th>tree</th>
+	<th>branch</th>
+	<th>kernel</th>
+	<th>defconfig</th>
+	<th>arch.</th>
+	<th class="text-right">tests</th>
+	<th class="text-right">date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in page.results" ui-sref="detail({id: item.id})">
+	<td>{{ item.build_id }}</td>
+	<td>{{ item.board }}</td>
+	<td>{{ item.tree }}</td>
+	<td ui-sref="detail({id: item.id})">{{ item.branch }}</td>
+	<td ui-sref="detail({id: item.id})">{{ item.kernel }}</td>
+	<td ui-sref="detail({id: item.id})">{{ item.defconfig }}</td>
+	<td ui-sref="detail({id: item.id})">{{ item.arch }}</td>
+	<th ui-sref="detail({id: item.id})" class="text-right">{{ item.test_jobs.length }}</th>
+	<td ui-sref="detail({id: item.id})" class="text-right">{{ item.created_at }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pagination page="page"></pagination>
+
+</div>

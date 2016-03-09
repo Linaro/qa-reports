@@ -1,0 +1,62 @@
+{% load compress %}
+<html lang="en" ng-app="app">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>qa-reports</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet" type="text/css">
+
+
+    {% compress css %}
+    <link rel="stylesheet" href="/static/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" type="text/sass" href="/static/main.scss">
+    {% endcompress %}
+
+    <script src="/static/bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="/static/bower_components/angular/angular.js"></script>
+    <script src="/static/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
+    <script src="/static/main.js"></script>
+
+  </head>
+
+  {% verbatim %}
+  <body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a ui-sref="index" class="navbar-brand">
+    	    <i class="fa fa-check-square-o"></i>
+    	    QA Reports
+    	  </a>
+        </div>
+    	<ul class="nav navbar-nav">
+          <li ui-sref-active="active"><a ui-sref="index" >Executions</a></li>
+          <li ui-sref-active="active"><a ui-sref="testjob-list">Test Jobs</a></li>
+	  <li ui-sref-active="active"><a ui-sref="testplan-list">Test Plans</a></li>
+        </ul>
+
+	<span ng-show="ready">
+	  <a href="#" ng-show="!user" ui-sref="login" class="navbar-text navbar-right navbar-link">
+	    login <i class="fa fa-sign-in"></i> 
+	  </a>
+
+	  <a href="#" ng-show="user" ui-sref="logout" class="navbar-text navbar-right navbar-link">
+	    {{ user.username }} <i class="fa fa-sign-out"></i> logout
+	  </a>
+	</span>
+
+      </div>
+    </div>
+    <div class="container" ui-view></div>
+
+  </body>
+  {% endverbatim %}
+
+</html>

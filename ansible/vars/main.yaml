@@ -1,0 +1,23 @@
+apache_user: www-data
+
+git_repo: "{{ repo | default('https://github.com/xando/qa-reports/') }}"
+git_branch: "{{ branch | default('master') }}"
+
+install_base: "/srv/{{inventory_hostname}}"
+logs_base: "{{ install_base }}/logs"
+project_base: "{{ install_base }}/project"
+static_base: "{{ install_base }}/static"
+ext_base: "{{ install_base }}/ext"
+
+project_wsgi: templates/wsgi.py
+project_settings: templates/private.py
+
+ssl_key: /etc/ssl/private/wildcard.linaro.org.key
+ssl_cert: /etc/ssl/certs/wildcard.linaro.org.crt
+ssl_ca: /etc/ssl/certs/gd_bundle-g2-g1.pem
+
+supervisor_base: "/srv/supervisor"
+supervisor_config: "{{ supervisor_base }}/config.conf"
+
+supervisor_bin: "/usr/bin/supervisord"
+supervisorctl_bin: "/usr/bin/supervisorctl"

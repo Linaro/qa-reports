@@ -1,0 +1,15 @@
+- name: configure qa-reports.linaro.org
+  hosts: all
+  sudo: yes
+
+  vars_files:
+    - "vars/main.yaml"
+    - "secrets/{{ inventory_hostname }}"
+    - "secrets/main.yaml"
+
+  roles:
+    - base
+    - postgres
+    - apache
+    - project
+    - supervisor

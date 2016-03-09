@@ -1,0 +1,83 @@
+<div ng-hide="loaded" class="loading"><i class="fa fa-cog fa-spin"></i></div>
+<div ng-show="loaded" class="view" id="test-plan-detail">
+
+  <div class="page-header">
+    <h1>TestPlan: {{ definition.name }}</h1>
+  </div>
+
+
+  <div class="row">
+    <div class="col-xs-6">
+
+      <form class="form search">
+	<div class="form-group">
+	  <input type="text" class="form-control input-sm" ng-model="search"
+		 placeholder="filter, min 2 chars">
+	</div>
+      </form>
+
+      <div ng-repeat="(name, test) in available.tests">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+
+	    <div>{{ test.metadata.description }}</div>
+
+	    <div class="btn-group btn-group-sm" role="group">
+	      <button type="button" class="btn btn-default"
+		      ng-click="test.show = !test.show">
+  		<i class="fa fa-arrow-circle-up" ng-if="test.show"></i>
+  		<i class="fa fa-arrow-circle-down" ng-if="!test.show"></i>
+	      </button>
+
+	      <button type="button" class="btn btn-default btn-xs"
+  		      ng-class="{active:test.active, 'btn-success':test.active}"
+  		      ng-click="selectTest(name)">
+  		<i class="fa fa-check"></i>
+	      </button>
+	    </div>
+
+	  </div>
+	  <div class="panel-body" ng-show="test.show">
+	    <h6>{{ name }}</h6>
+	    <hr/>
+	    <ol><li ng-repeat="step in test.steps">{{ step }}</li>
+	    </ol>
+	    <hr/>
+	    <ol><li ng-repeat="step in test.expected">{{ step }}</li></ol>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <form class="form search" ng-submit="submit()">
+      	<div class="form-group" ng-class="errors.name ? 'has-error':''">
+      	  <input type="text" class="form-control input-sm"
+      		 ng-model="definition.name" placeholder="plan name">
+
+      	</div>
+
+  	<div ng-repeat="name in definition.data.tests">
+  	  <div class="panel panel-default">
+  	    <div class="panel-heading">
+  	      <div>{{ available.tests[name].metadata.description }}</div>
+
+  	      <button type="button" class="btn btn-default btn-sm"
+  		      ng-click="selectTest(name)">
+  		<i class="fa fa-times"></i>
+  	      </button>
+
+  	    </div>
+  	  </div>
+  	</div>
+
+      	<button type="submit" class="btn btn-primary btn-sm btn-block">
+      	  Save
+      	</button>
+
+      </form>
+    </div>
+
+  </div>
+
+</div>

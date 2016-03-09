@@ -1,0 +1,62 @@
+- name: install apache
+  apt: pkg={{item}} state=installed update-cache=yes
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+  tags:
+    - install
+    - update
+
+- name: enable modules
+  command:  a2enmod {{ item }}
+            creates=/etc/apache2/mods-enabled/{{ item }}.load
+  with_items:
+    - ssl
+    - wsgi
+    - expires
+    - headers
+    - rewrite
+  notify: restart-apache
+  tags:
+      - install
+
+- name: configure apache
+  template: src=templates/apache.conf dest=/etc/apache2/sites-available/{{inventory_hostname}}
+            mode=0644
+            backup=yes
+            owner=root
+            group=root
+  sudo: yes
+  notify:
+      - restart-apache
+  tags:
+      - apache
+      - apache-conf
+
+- name: Add Apache 2.4 compatibility symlink
+  sudo: yes
+  file: state=link force=yes
+        src={{inventory_hostname}}
+        dest=/etc/apache2/sites-available/{{inventory_hostname}}.conf
+  tags:
+      - apache
+
+- name: Enable site config
+  command: a2ensite {{inventory_hostname}}
+  sudo: yes
+  register: result
+  changed_when: "'already enabled' not in result.stdout"
+  notify:
+      - restart-apache
+  tags:
+      - apache
+
+- name: Disable OS default site config
+  command: a2dissite 000-default
+  sudo: yes
+  register: result
+  changed_when: "'already disabled' not in result.stdout"
+  notify:
+      - restart-apache
+  tags:
+      - apache

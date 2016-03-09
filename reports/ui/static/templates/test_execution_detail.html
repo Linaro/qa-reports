@@ -1,0 +1,78 @@
+<div ng-hide="loaded" class="loading"><i class="fa fa-cog fa-spin"></i></div>
+<div ng-show="loaded" class="view" id="test-execution-detail">
+
+  <div class="page-header">
+    <h1 id="navs" title="kernel ci build">
+      <small>build:</small><a href="https://kernelci.org/build/{{ item.tree }}/kernel/{{ item.kernel }}/defconfig/{{ item.defconfig }}/?_id={{ item.build_id }}">{{ item.build_id }}</a>
+    </h1>
+    <h2 title="board">
+      <small>board:</small>{{ item.board }}
+    </h2>
+  </div>
+
+  <h4><small>tree:</small> {{ item.tree }}</h4>
+  <h4><small>branch:</small> {{ item.branch }}</h4>
+  <h4><small>kernel:</small> {{ item.kernel }}</h4>
+  <h4><small>defconfig:</small> {{ item.defconfig }}</h4>
+  <h4><small>arch:</small> {{ item.arch }}</h4>
+  <h4><small>time:</small> {{ item.created_at }}</h4>
+
+  <hr>
+
+  <div class="tests">
+
+    <div class="row">
+      <div class="col-xs-6">
+	<div class="heading">
+	  Tests Jobs
+	</div>
+      </div>
+
+      <div class="col-xs-6">
+	<form class="form" ng-submit="addTestJobManual()">
+  	  <div class="input-group">
+  	    <select class="form-control input-sm" ng-model="definitionSelected"
+  	  	    ng-options="item.id as item.name for item in definitions track by item.id">
+  	      <option value="">-- select plan --</option>
+  	    </select>
+
+  	    <span class="input-group-btn">
+  	      <button type="submit" class="btn btn btn-warning">
+  		<i class="fa fa-plus-circle"></i>
+  	      </button>
+  	    </span>
+  	  </div>
+	</form>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="testjob" ng-repeat="testjob in testjobs">
+	<div class="heading" ng-class="{active:testjob.show}" ng-click="testjob.show = !testjob.show">
+	  <div class="row">
+	    <div class="col-xs-5">
+	      <a href="" ui-sref="testjob-detail({id: testjob.id, kind: testjob.kind})">
+		{{ testjob.run_definition.definition.name }}
+	      </a>
+	    </div>
+	    <div class="col-xs-3 text-right">{{ testjob.created_at }}</div>
+	    <div class="col-xs-2 text-right">{{ testjob.status }}</div>
+	  </div>
+	</div>
+	
+	<div class="results" ng-show="testjob.show">
+	  <table class="table table-condensed">
+	    <tbody>
+	      <tr ng-repeat="(name, test) in testjob.results">
+		<td>{{ test.name }}</td>
+		<td class="text-right">{{ test.status }}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,39 @@
+<div ng-hide="loaded" class="loading"><i class="fa fa-cog fa-spin"></i></div>
+<div ng-show="loaded" class="view" id="test-job-detail">
+
+  <div class="page-header">
+    <h1 title="kernelci build">
+      <small>name:</small>{{ data.run_definition.definition.name }}
+    </h1>
+    <h2 title="build">
+      <small>build:</small><a href="https://kernelci.org/build/{{ data.test_execution.tree }}/kernel/{{ data.test_execution.kernel }}/defconfig/{{ data.test_execution.defconfig }}/?_id={{ data.test_execution.build_id }}">{{ data.test_execution.build_id }}</a>
+    </h2>
+    <h2 title="board">
+      <small>board:</small>{{ data.test_execution.board }}
+    </h2>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" ng-style="progress.pass"></div>
+    <div class="progress-bar" ng-style="progress.idle"></div>
+    <div class="progress-bar progress-bar-warning" ng-style="progress.skip"></div>
+    <div class="progress-bar progress-bar-danger" ng-style="progress.fail"></div>
+  </div>
+
+  <div class="attributes">
+    <div class="items">
+      <h4><small>tree:</small> {{ data.test_execution.tree }}</h4>
+      <h4><small>branch:</small> {{ data.test_execution.branch }}</h4>
+      <h4><small>kernel:</small> {{ data.test_execution.kernel }}</h4>
+      <h4><small>defconfig:</small> {{ data.test_execution.defconfig }}</h4>
+      <h4><small>arch:</small> {{ data.test_execution.arch }}</h4>
+      <h4><small>time:</small> {{ data.test_execution.created_at }}</h4>
+    </div>
+    <div class="notes text-right">
+      <textarea ng-model="data.notes" class="form-control" ng-blur="saveNotes()"></textarea>
+    </div>
+  </div>
+
+  <ui-view></ui-view>
+  
+</div>

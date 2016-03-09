@@ -1,0 +1,12 @@
+ansible/secrets/
+.env/
+.virtualenv/
+.vagrant/
+*.pyc
+.DS_Store
+*~
+*#
+*.sqlite3
+*.sqlite
+*/settings/private.py
+ext/

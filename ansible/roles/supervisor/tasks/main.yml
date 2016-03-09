@@ -1,0 +1,62 @@
+- name: supervisor install
+  pip: name=supervisor
+  tags:
+    - install
+    - update
+    
+- name: supervisor directories
+  file: path={{ supervisor_base }}
+        owner={{apache_user}}
+        group={{apache_user}}
+        mode=0755
+        state=directory
+
+- name: copy supervisord.conf
+  become_user: "{{ apache_user }}"
+  template: src=templates/supervisord.conf
+            dest={{ supervisor_config }}
+            owner={{ apache_user }} group={{ apache_user }} mode=0755
+  tags:
+    - install
+    - update
+    - celery
+
+- name: copy supervisor service files
+  become_user: "{{ apache_user }}"
+  template: src="templates/{{ item.src }}"
+            dest="{{ supervisor_base }}/{{item.dest}}"
+            owner={{apache_user}}
+            group={{apache_user}}
+            mode=0755
+  with_items:
+    - { src: 'supervisor.celerycam.conf', dest: '{{ inventory_hostname }}.celery_cam.conf' }
+    - { src: 'supervisor.celeryd.conf', dest: '{{ inventory_hostname }}.celery_worker.conf' }
+
+  tags:
+    - install
+    - update
+    - celery
+
+- name: checking if supervisord is running
+  shell: pgrep -u {{ apache_user }} supervisor
+  ignore_errors: on
+  changed_when: off
+  register: supervisor_running
+
+- name: running supervisord
+  shell: "{{ supervisor_bin }} -c {{ supervisor_config }}"
+  become_user: "{{ apache_user }}"
+  when: supervisor_running|failed
+  tags:
+    - install
+    - update
+    - celery
+
+- name: supervisor restart
+  shell: "{{ supervisorctl_bin }} -c {{ supervisor_config }} restart all"
+  become_user: "{{ apache_user }}"
+
+- name: supervisor update
+  shell: "{{ supervisorctl_bin }} -c {{ supervisor_config }} update"
+  become_user: "{{ apache_user }}"
+
