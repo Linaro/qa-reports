@@ -6,9 +6,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'qa-reports',
-        'USER': 'qa-reports',
+        'USER': 'postgres',
         'PASSWORD': 'qa-reports',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

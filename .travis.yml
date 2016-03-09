@@ -11,6 +11,7 @@ env:
 - DJANGO_SETTINGS_MODULE=reports.settings.travis
 
 before_install:
+  - git clone https://git.linaro.org/qa/manual-test-definitions.git ext/manual-test-definitions
   - psql -c 'create database "qa-reports";' -U postgres
 
 install:
