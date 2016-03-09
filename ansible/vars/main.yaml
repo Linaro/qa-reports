@@ -1,6 +1,6 @@
 apache_user: www-data
 
-git_repo: "{{ repo | default('https://github.com/xando/qa-reports/') }}"
+git_repo: "{{ repo | default('https://github.com/linaro/qa-reports/') }}"
 git_branch: "{{ branch | default('master') }}"
 
 install_base: "/srv/{{inventory_hostname}}"
