@@ -1,5 +1,3 @@
-from mock import patch
-
 from django_dynamic_fixture import G
 
 from django.test import TestCase

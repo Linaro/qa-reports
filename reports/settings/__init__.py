@@ -1,5 +1,4 @@
 import os
-import json
 
 from celery.schedules import crontab
 import djcelery; djcelery.setup_loader()

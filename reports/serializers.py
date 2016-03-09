@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework import exceptions
 
 from django.contrib import auth
 
