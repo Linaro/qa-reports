@@ -153,6 +153,7 @@ class TestResult(models.Model):
     status = models.CharField(max_length=128, null=True)
     data = JSONField(null=True)
     regression = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(default=timezone.now)
     modifed_at = models.DateTimeField(auto_now=True)
 

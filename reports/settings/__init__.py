@@ -75,8 +75,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%H:%M:%S %d-%m-%Y",
+    'DATETIME_INPUT_FORMATS': ["%H:%M:%S", "%H:%M:%S %d-%m-%Y"],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),

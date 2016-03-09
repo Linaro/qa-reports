@@ -1,8 +1,10 @@
 from mock import patch
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from django_dynamic_fixture import G
+
 from rest_framework.test import APITestCase
 from rest_framework import status
 
@@ -90,6 +92,17 @@ class TestTestJob(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
+    def test_update_notes(self):
+        test_job = G(models.TestJob, kind='automatic')
+
+        data = {'notes': 'a text'}
+        url = '/api/test-job/%s/' % test_job.id
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(models.TestJob.objects.get().notes, data['notes'])
+
 
 class TestResult(APITestCase):
 
@@ -124,13 +137,50 @@ class TestResult(APITestCase):
         self.assertEqual(models.TestResult.objects.get().status, 'pass')
         self.assertEqual(models.TestResult.objects.get().name, original_name)
 
-    def test_update_notes(self):
-        test_job = G(models.TestJob, kind='automatic')
+    def test_update_collision_1(self):
+        test_result = G(models.TestResult, name="test_name")
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
-        data = {'notes': 'a text'}
-        url = '/api/test-job/%s/' % test_job.id
+        modifed_at = test_result.modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
 
-        response = self.client.patch(url, data, format='json')
+        data = {'status': 'pass', 'modifed_at': modifed_at}
+
+        response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(models.TestJob.objects.get().notes, data['notes'])
+
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_collision_2(self):
+        test_result = G(models.TestResult, name="test_name")
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+
+        modifed_at = test_result.modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
+
+        data = {'status': 'pass', 'modifed_at': modifed_at}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = {'status': 'fail', 'modifed_at': modifed_at}
+        response = self.client.put(url, data, format='json')
+
+        self.assertTrue(response.data['status'][0], 'pass')  # previous status as an error
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_collision_3(self):
+        test_result = G(models.TestResult, name="test_name")
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+
+        data = {'status': 'pass'}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = {'status': 'fail'}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
