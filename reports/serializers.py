@@ -76,10 +76,10 @@ class TestJobRead(TestJob):
 
 
 class TestResultUpdate(serializers.ModelSerializer):
+    datetime_format = "%H:%M:%S %d-%m-%Y.%f"
     modifed_at = serializers.DateTimeField(required=False,
-                                           format="%H:%M:%S %d-%m-%Y.%f",
-                                           input_formats=["%H:%M:%S %d-%m-%Y.%f"]
-    )
+                                           format=datetime_format,
+                                           input_formats=[datetime_format])
 
     class Meta:
         model = models.TestResult
@@ -92,8 +92,8 @@ class TestResultUpdate(serializers.ModelSerializer):
         if not modifed_at:
             return data
 
-        old_timestamp = self.instance.modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
-        new_timestamp = modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
+        old_timestamp = self.instance.modifed_at.strftime(self.datetime_format)
+        new_timestamp = modifed_at.strftime(self.datetime_format)
 
         if old_timestamp == new_timestamp:
             return data
