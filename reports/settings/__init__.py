@@ -157,6 +157,10 @@ EXT_REPOSITORY = {
     }
 }
 
+CREDENTIALS = {
+    'validation.linaro.org': ('user', "password"),
+}
+
 DDF_FIELD_FIXTURES = {
     'django.contrib.postgres.fields.jsonb.JSONField': {
         'ddf_fixture': lambda: []

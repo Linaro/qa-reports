@@ -20,3 +20,4 @@ pdbpp
 ndg-httpsclient
 cryptography
 pyOpenSSL
+flake8
