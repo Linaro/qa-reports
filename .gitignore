@@ -10,3 +10,4 @@ ansible/secrets/
 *.sqlite
 */settings/private.py
 ext/
+debug.py
