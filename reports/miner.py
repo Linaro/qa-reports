@@ -80,23 +80,25 @@ class kernelci(object):
 
 
 class manual(object):
-    repo = git.Repo(settings.EXT_REPOSITORY["manual-test-definitions"]['location'])
 
     def __init__(self, test_job):
         self.test_job = test_job
+
+    def repo(self):
+        return git.Repo(settings.EXT_REPOSITORY["manual-test-definitions"]['location'])
 
     def id(self):
         return str(uuid.uuid4()).replace('-', '')
 
     @classmethod
     def sha(self):
-        return self.repo.head.commit.hexsha
+        return self.repo().head.commit.hexsha
 
     @classmethod
     def tests(self):
         tests = {}
 
-        for item in self.repo.tree().traverse():
+        for item in self.repo().tree().traverse():
             if item.path.endswith(".yaml"):
                 data = yaml.load(item.data_stream.read())
 
@@ -121,7 +123,7 @@ class manual(object):
             tests[test] = available[test]
 
         return {
-            "sha": self.repo.head.commit.hexsha,
+            "sha": self.repo().head.commit.hexsha,
             "tests": tests
         }
 
