@@ -20,8 +20,8 @@
       <th>build</th>
       <th>board</th>
       <th class="text-center">kind</th>
-      <th class="text-center">status</th>
       <th class="text-right">date</th>
+      <th class="text-center">status</th>
     </tr>
   </thead>
   <tbody>
@@ -34,8 +34,10 @@
       <td>{{ item.test_execution.build_id }}</td>
       <td>{{ item.test_execution.board }}</td>
       <td class="text-center">{{ item.kind }}</td>
-      <td class="text-center">{{ item.status || "not set"}}</td>
       <td class="text-right">{{ item.created_at }}</td>
+      <td class="text-center">
+	<progress results="item.results" />
+      </td>
     </tr>
   </tbody>
 </table>

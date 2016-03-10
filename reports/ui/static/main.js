@@ -374,6 +374,35 @@ app.directive('pagination', function($state, $httpParamSerializer, $location) {
     };
 });
 
+app.directive('progress', function($state, $httpParamSerializer, $location) {
+    return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+            results: '='
+        },
+        templateUrl: '/static/templates/_progress.html',
+        link: function(scope, elem, attrs) {
+
+            scope.$watch('results', function(tests, b) {
+                if (!tests) return;
+                console.log('test');
+                var total = _.keys(tests).length;
+                var statuses = _.countBy(tests, 'status');
+
+                scope.progress = {
+                    "pass": {'width': (statuses.pass / total * 100) + '%' },
+                    "skip": {'width': (statuses.skip / total * 100) + '%' },
+                    "fail": {'width': (statuses.fail / total * 100) + '%' },
+                    "idle": {'width': (statuses.null / total * 100) + '%' }
+                };
+            }, true);
+
+        }
+    };
+});
+
+
 app.filter('join', function() {
     return function(input) {
         return (input instanceof Array) ? input.join(", "): input;
