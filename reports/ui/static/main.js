@@ -52,13 +52,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         })
         .state('testjob-detail.view', {
             url: "/view/",
-            templateUrl: "/static/templates/test_job_automatic_detail.html",
-            controller: 'TestJobView'
+            templateUrl: "/static/templates/test_job_view.html"
         })
         .state('testjob-detail.edit', {
             url: "/edit/",
-            templateUrl: "/static/templates/test_job_manual_detail.html",
-            controller: 'TestJobView'
+            templateUrl: "/static/templates/test_job_edit.html",
+            controller: 'TestJobEdit'
         })
         .state('testplan-list', {
             url: "/testplan/",
@@ -171,7 +170,7 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
 
 });
 
-app.controller('TestJobView', function($state, $stateParams, $scope, API, $q) {
+app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
 
     $scope.cssStatusClass = function(test) {
         if (test.status == 'pass')
@@ -191,11 +190,6 @@ app.controller('TestJobView', function($state, $stateParams, $scope, API, $q) {
             test.status = status;
         }
     };
-});
-
-
-app.controller('TestJobAutomaticDetail', function($state, $stateParams, $scope, API) {
-
 });
 
 app.controller('TestPlanNew', function($state, $scope, API, $q) {
