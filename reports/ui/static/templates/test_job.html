@@ -28,6 +28,7 @@
       <h4><small>defconfig:</small> {{ data.test_execution.defconfig }}</h4>
       <h4><small>arch:</small> {{ data.test_execution.arch }}</h4>
       <h4><small>time:</small> {{ data.test_execution.created_at }}</h4>
+      <h4><small>regression:</small> {{ data.regression ? "yes" : "no" }}</h4>
     </div>
     <div class="notes text-right">
       <textarea ng-model="data.notes" class="form-control" ng-blur="saveNotes()"></textarea>
