@@ -50,18 +50,15 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             templateUrl: "/static/templates/test_job.html",
             controller: 'TestJob'
         })
-        .state('testjob-detail.manual', {
-            url: "/manual/",
+        .state('testjob-detail.view', {
+            url: "/view/",
+            templateUrl: "/static/templates/test_job_automatic_detail.html",
+            controller: 'TestJobView'
+        })
+        .state('testjob-detail.edit', {
+            url: "/edit/",
             templateUrl: "/static/templates/test_job_manual_detail.html",
-            controller: 'TestJobManualDetail'
-        })
-        .state('testjob-detail.automatic', {
-            url: "/automatic/",
-            templateUrl: "/static/templates/test_job_automatic_detail.html"
-        })
-        .state('testjob-detail.kernelci', {
-            url: "/automatic/",
-            templateUrl: "/static/templates/test_job_automatic_detail.html"
+            controller: 'TestJobView'
         })
         .state('testplan-list', {
             url: "/testplan/",
@@ -147,7 +144,12 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
         $scope.data = response.data;
         $scope.loaded = true;
 
-        $state.go('testjob-detail.' + $scope.data.kind, {}, {location: "replace"});
+        if ($scope.data.kind === "manual" && $scope.user) {
+            $state.go('testjob-detail.edit', {}, {location: "replace"});
+        } else {
+            $state.go('testjob-detail.view', {}, {location: "replace"});
+        }
+
     });
 
     $scope.$watch('data.results', function(tests, b) {
@@ -169,7 +171,7 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
 
 });
 
-app.controller('TestJobManualDetail', function($state, $stateParams, $scope, API, $q) {
+app.controller('TestJobView', function($state, $stateParams, $scope, API, $q) {
 
     $scope.cssStatusClass = function(test) {
         if (test.status == 'pass')

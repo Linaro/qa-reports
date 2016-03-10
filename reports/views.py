@@ -58,7 +58,7 @@ class TestJob(viewsets.ModelViewSet):
 
 class TestResult(viewsets.ModelViewSet):
     queryset = models.TestResult.objects.select_related('test_job')
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     lookup_field = ('test_job', 'name')
     lookup_value_regex = ('[^/.]+', '.+')
 
