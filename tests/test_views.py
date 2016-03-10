@@ -106,6 +106,10 @@ class TestTestJob(APITestCase):
 
 class TestResult(APITestCase):
 
+    def setUp(self):
+        user = G(get_user_model(), username="tripbit")
+        self.client.force_authenticate(user=user)
+
     def test_read(self):
         test_result = G(models.TestResult, name="things/with/urls.yaml")
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
