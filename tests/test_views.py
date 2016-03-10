@@ -145,9 +145,9 @@ class TestResult(APITestCase):
         test_result = G(models.TestResult, name="test_name")
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
-        modifed_at = test_result.modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
+        modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
 
-        data = {'status': 'pass', 'modifed_at': modifed_at}
+        data = {'status': 'pass', 'modified_at': modified_at}
 
         response = self.client.put(url, data, format='json')
 
@@ -161,14 +161,14 @@ class TestResult(APITestCase):
         test_result = G(models.TestResult, name="test_name")
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
-        modifed_at = test_result.modifed_at.strftime("%H:%M:%S %d-%m-%Y.%f")
+        modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
 
-        data = {'status': 'pass', 'modifed_at': modifed_at}
+        data = {'status': 'pass', 'modified_at': modified_at}
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = {'status': 'fail', 'modifed_at': modifed_at}
+        data = {'status': 'fail', 'modified_at': modified_at}
         response = self.client.put(url, data, format='json')
 
         self.assertTrue(response.data['status'][0], 'pass')  # previous status as an error

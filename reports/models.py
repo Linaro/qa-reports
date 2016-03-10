@@ -155,7 +155,7 @@ class TestResult(models.Model):
     regression = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(default=timezone.now)
-    modifed_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']

@@ -128,8 +128,10 @@ class manual(object):
         }
 
     def get_results(self):
-        results = self.test_job.tests_results.values_list("name", "status", "data")
-        results = {result.name: {"status": result.status, "data": result.data}
+        results = self.test_job.tests_results.values_list("name", "status", "data", "modified_at")
+        results = {result.name: {"status": result.status,
+                                 "data": result.data,
+                                 "modified_at": result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")}
                    for result in self.test_job.tests_results.all()}
 
         tests = self.test_job.run_definition.data['tests']

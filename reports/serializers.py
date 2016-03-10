@@ -43,7 +43,7 @@ class RunDefinition(serializers.ModelSerializer):
 
 
 class TestResult(serializers.ModelSerializer):
-    modifed_at = serializers.DateTimeField(required=False)
+    modified_at = serializers.DateTimeField(required=False)
 
     class Meta:
         model = models.TestResult
@@ -77,23 +77,23 @@ class TestJobRead(TestJob):
 
 class TestResultUpdate(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
-    modifed_at = serializers.DateTimeField(required=False,
-                                           format=datetime_format,
-                                           input_formats=[datetime_format])
+    modified_at = serializers.DateTimeField(required=False,
+                                            format=datetime_format,
+                                            input_formats=[datetime_format])
 
     class Meta:
         model = models.TestResult
-        fields = ('status', 'modifed_at')
+        fields = ('status', 'modified_at')
         read_only_fields = ('created_at',)
 
     def validate(self, data):
-        modifed_at = data.pop('modifed_at', None)
+        modified_at = data.pop('modified_at', None)
 
-        if not modifed_at:
+        if not modified_at:
             return data
 
-        old_timestamp = self.instance.modifed_at.strftime(self.datetime_format)
-        new_timestamp = modifed_at.strftime(self.datetime_format)
+        old_timestamp = self.instance.modified_at.strftime(self.datetime_format)
+        new_timestamp = modified_at.strftime(self.datetime_format)
 
         if old_timestamp == new_timestamp:
             return data
@@ -102,5 +102,6 @@ class TestResultUpdate(serializers.ModelSerializer):
             return data
 
         raise serializers.ValidationError({
-            'status': self.instance.status
+            'status': self.instance.status,
+            'user': User(self.context['request'].user).data
         })
