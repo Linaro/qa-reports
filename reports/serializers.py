@@ -42,14 +42,6 @@ class RunDefinition(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at')
 
 
-class TestResult(serializers.ModelSerializer):
-    modified_at = serializers.DateTimeField(required=False)
-
-    class Meta:
-        model = models.TestResult
-        read_only_fields = ('created_at',)
-
-
 class TestJob(serializers.ModelSerializer):
     definition = serializers.PrimaryKeyRelatedField(
         write_only=True,
@@ -75,6 +67,14 @@ class TestJobRead(TestJob):
         return miner(obj).get_results()
 
 
+class TestResult(serializers.ModelSerializer):
+    modified_at = serializers.DateTimeField(required=False)
+
+    class Meta:
+        model = models.TestResult
+        read_only_fields = ('created_at',)
+
+
 class TestResultUpdate(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
     modified_at = serializers.DateTimeField(required=False,
@@ -87,8 +87,9 @@ class TestResultUpdate(serializers.ModelSerializer):
         read_only_fields = ('created_at',)
 
     def validate(self, data):
-        modified_at = data.pop('modified_at', None)
+        data['modified_by'] = self.context['request'].user
 
+        modified_at = data.pop('modified_at', None)
         if not modified_at:
             return data
 

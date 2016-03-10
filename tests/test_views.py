@@ -107,8 +107,8 @@ class TestTestJob(APITestCase):
 class TestResult(APITestCase):
 
     def setUp(self):
-        user = G(get_user_model(), username="tripbit")
-        self.client.force_authenticate(user=user)
+        self.user = G(get_user_model(), username="tripbit")
+        self.client.force_authenticate(user=self.user)
 
     def test_read(self):
         test_result = G(models.TestResult, name="things/with/urls.yaml")
@@ -126,7 +126,11 @@ class TestResult(APITestCase):
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(models.TestResult.objects.get().status, 'pass')
+
+        test_result = models.TestResult.objects.get()
+
+        self.assertEqual(test_result.status, 'pass')
+        self.assertEqual(test_result.modified_by, self.user)
 
     def test_update_2(self):
         original_name = "things/with/urls.yaml"
