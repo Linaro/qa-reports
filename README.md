@@ -2,85 +2,110 @@
 [![Build Status](https://travis-ci.org/Linaro/qa-reports.svg?branch=master)](https://travis-ci.org/Linaro/qa-reports)
 
 
-
 ## setup (ubuntu)
 
 1) required system packages
-    - python-dev
-    - python-psycopg2
-    - python-pip (or [get-pip.py](https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py))
-    - libffi-dev
-    - libssl-dev
-    - git
-    - postgresql
-    - postgresql-contrib
-    - libpq-dev
+
+```
+sudo apt-get install python-dev python-pip libffi-dev libssl-dev git
+```
+
+1) postgresql
+
+```
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" >> /etc/apt/sources.list.d/postgresql.list'
+sudo apt-get install postgresql-9.5 postgresql-contrib-9.5 libpq-dev
+```
 
 1) required python packages
 
-	`pip install -U pip virtualenv`
+```
+sudo pip install -U pip virtualenv
+```
 
 1) project packages
 
-	- `pip install -U pip virtualenv`
-	- `virtualenv .virtualenv/`
-	- `source .virtualenv/bin/activate`
-	- `(.virtualenv) pip install -r requirements.txt`
-
+```
+git clone <repo>
+cd qa-reports
+virtualenv .virtualenv/
+source .virtualenv/bin/activate
+pip install -r requirements.txt
+```
 
 
 ## configure
 
-1) create `settings/private.py`, append with the content, modify to the needs
-	```
-	from . import *
+1) create `reports/settings/private.py`, append with the content, modify to the needs
 
-	KERNELCI_TOKEN = "FAKE-TOKEN"
-	SECRET_KEY = "FAKE-TOKEN"
+```
+from . import *
 
-	QUERY_INSPECT_ENABLED = True
-	QUERY_INSPECT_LOG_QUERIES = True
+KERNELCI_TOKEN = "FAKE-TOKEN"
+SECRET_KEY = "FAKE-TOKEN"
 
-	MIDDLEWARE_CLASSES += (
-		'qinspect.middleware.QueryInspectMiddleware',
-	)
+QUERY_INSPECT_ENABLED = True
+QUERY_INSPECT_LOG_QUERIES = True
 
-	DATABASES = {
-		'default': {
-			'ENGINE': 'django.db.backends.postgresql_psycopg2',
-			'NAME': 'qa-reports',
-			'USER': 'qa-reports',
-			'PASSWORD': 'qa-reports',
-			'HOST': 'localhost',
-		}
+MIDDLEWARE_CLASSES += (
+	'qinspect.middleware.QueryInspectMiddleware',
+)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'qa-reports',
+		'USER': 'qa-reports',
 	}
+}
+LOGGING['loggers']['qinspect'] = {
+	'handlers': ['console'],
+    'level': 'DEBUG',
+	'propagate': True,
+}
 
-	LOGGING['loggers']['qinspect'] = {
-		'handlers': ['console'],
-		'level': 'DEBUG',
-		'propagate': True,
-	}
+CELERY_ALWAYS_EAGER = True
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
-	CELERY_ALWAYS_EAGER = True
-	CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
-
-	STATIC_ROOT = '/tmp/qa-reports/static'
-	```
+STATIC_ROOT = '/tmp/qa-reports/static'
+```
 
 2) configure database
 
-	- `/etc/postgresql/9.X/main/postgresql.conf` uncomment line `listen_addresses = 'localhost'`
-	- `sudo -u postgres bash`
-	- `createuser qa-reports`
-	- `createdb qa-reports`
-	- `python manage.py migrate`
+In `/etc/postgresql/9.5/main/pg_hba.conf` change
+change line `local all all md5` to `local all all trust`
+
+```	
+sudo service postgresql restart
+```
+
+```
+sudo -u postgres bash
+createuser qa-reports -d	
+createdb -U qa-reports qa-reports
+exit
+```
+
+```
+python manage.py migrate
+```
 
 3) setup external repos (ext)
 
-	`python manage.py init_ext`
+```
+python manage.py init_ext
+```
+
+
+### development server
+```
+python manage.py runserver 0.0.0.0:8000`
+```
 
 
 
 ### tests
-
-	`python manage.py test`
+```
+python manage.py test
+```
