@@ -44,7 +44,7 @@
   register: supervisor_running
 
 - name: running supervisord
-  shell: "{{ supervisor_bin }} -c {{ supervisor_config }}"
+  shell: "supervisord -c {{ supervisor_config }}"
   become_user: "{{ apache_user }}"
   when: supervisor_running|failed
   tags:
@@ -53,10 +53,10 @@
     - celery
 
 - name: supervisor restart
-  shell: "{{ supervisorctl_bin }} -c {{ supervisor_config }} restart all"
+  shell: "supervisorctl -c {{ supervisor_config }} restart all"
   become_user: "{{ apache_user }}"
 
 - name: supervisor update
-  shell: "{{ supervisorctl_bin }} -c {{ supervisor_config }} update"
+  shell: "supervisorctl -c {{ supervisor_config }} update"
   become_user: "{{ apache_user }}"
 

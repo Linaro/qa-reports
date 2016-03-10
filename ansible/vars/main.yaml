@@ -18,6 +18,3 @@ ssl_ca: /etc/ssl/certs/gd_bundle-g2-g1.pem
 
 supervisor_base: "/srv/supervisor"
 supervisor_config: "{{ supervisor_base }}/config.conf"
-
-supervisor_bin: "/usr/bin/supervisord"
-supervisorctl_bin: "/usr/bin/supervisorctl"

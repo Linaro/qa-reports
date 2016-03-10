@@ -23,6 +23,19 @@
   notify:
     - restart-apache
 
+- name: checkout code - ext
+  git: repo={{git_repo}}
+       dest={{ ext_base }}/manual-test-definitions
+       update=yes
+       ssh_opts="-o StrictHostKeyChecking=no"
+  sudo_user: "{{apache_user}}"
+  tags:
+    - install
+    - update
+    - django
+  notify:
+    - restart-apache
+
 - name: install project dependencies
   sudo_user: "{{apache_user}}"
   pip: requirements={{install_base}}/project/requirements.txt
@@ -51,6 +64,17 @@
     - update
     - django
 
+
+- name: Init ext repositories
+  sudo_user: "{{apache_user}}"
+  django_manage: app_path={{ project_base }}
+                 virtualenv={{install_base}}/.virtualenv
+                 command="init_ext"
+
+  tags:
+    - django
+    - update
+    
 - name: Run migrations
   sudo_user: "{{apache_user}}"
   django_manage: app_path={{ project_base }}
@@ -70,4 +94,3 @@
   tags:
     - django
     - update
-    

@@ -2,6 +2,8 @@
   apt: pkg={{item}} state=installed update-cache=yes
   with_items:
     - python-dev
+    - python-psycopg2
+    - python-pip
     - libffi-dev 
     - libssl-dev
     - git
