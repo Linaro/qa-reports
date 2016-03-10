@@ -147,7 +147,7 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
         $scope.data = response.data;
         $scope.loaded = true;
 
-        $state.go('testjob-detail.' + $scope.data.kind);
+        $state.go('testjob-detail.' + $scope.data.kind, {}, {location: "replace"});
     });
 
     $scope.$watch('data.results', function(tests, b) {
