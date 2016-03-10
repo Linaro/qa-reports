@@ -27,8 +27,8 @@
   <tbody>
     <tr ng-repeat="item in page.results" ui-sref="testjob-detail({id: item.id, kind: item.kind })">
       <td>
-	<i ng-show="!item.regression" title="regression" class="fa fa-thumbs-up"></i>
-	<i ng-show="item.regression" title="no regression" class="fa fa-thumbs-down"></i>
+	<i ng-show="!item.regression" title="no regression" class="fa fa-thumbs-up"></i>
+	<i ng-show="item.regression" title="regression" class="fa fa-thumbs-down"></i>
 	{{ item.run_definition.definition.name || item.id }}
       </td>
       <td>{{ item.test_execution.build_id }}</td>
