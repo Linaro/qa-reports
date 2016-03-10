@@ -386,7 +386,6 @@ app.directive('progress', function($state, $httpParamSerializer, $location) {
 
             scope.$watch('results', function(tests, b) {
                 if (!tests) return;
-                console.log('test');
                 var total = _.keys(tests).length;
                 var statuses = _.countBy(tests, 'status');
 
