@@ -55,9 +55,6 @@ class automatic(object):
                         data=test_result
                     )
 
-    def get_results(self):
-        return self.test_job.tests_results.values()
-
 
 class kernelci(object):
 
@@ -74,9 +71,6 @@ class kernelci(object):
                 name=test['name'],
                 status=test['status'].lower()
             )
-
-    def get_results(self):
-        return self.test_job.tests_results.values()
 
 
 class manual(object):
@@ -126,20 +120,6 @@ class manual(object):
             "sha": self.repo().head.commit.hexsha,
             "tests": tests
         }
-
-    def get_results(self):
-        results = self.test_job.tests_results.values_list("name", "status", "data", "modified_at")
-        results = {result.name: {"status": result.status,
-                                 "data": result.data,
-                                 "modified_at": result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")}
-                   for result in self.test_job.tests_results.all()}
-
-        tests = self.test_job.run_definition.data['tests']
-
-        for name, definition in tests.items():
-            tests[name].update(results[name])
-
-        return tests
 
     def create_results(self):
         for name in self.test_job.run_definition.data['tests'].keys():

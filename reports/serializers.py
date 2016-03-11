@@ -3,7 +3,6 @@ from rest_framework import serializers
 from django.contrib import auth
 
 from . import models
-from .miner import miner
 
 
 class User(serializers.ModelSerializer):
@@ -13,14 +12,12 @@ class User(serializers.ModelSerializer):
         model = auth.models.User
 
 
-class TestJobExecution(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.TestJob
-
-
 class TestExecution(serializers.ModelSerializer):
-    test_jobs = TestJobExecution(many=True, read_only=True)
+    class TestJob(serializers.ModelSerializer):
+        class Meta:
+            model = models.TestJob
+
+    test_jobs = TestJob(many=True, read_only=True)
 
     class Meta:
         model = models.TestExecution
@@ -42,49 +39,26 @@ class RunDefinition(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at')
 
 
-class TestJob(serializers.ModelSerializer):
-    definition = serializers.PrimaryKeyRelatedField(
-        write_only=True,
-        queryset=models.Definition.objects.all())
-
-    class Meta:
-        model = models.TestJob
-        read_only_fields = ('id', 'run_definition', 'created_at')
-
-
-class TestJobExecution(serializers.ModelSerializer):
-    class Meta:
-        model = models.TestExecution
-
-
-class TestJobRead(TestJob):
-    test_execution = TestJobExecution()
-    run_definition = RunDefinition()
-    results = serializers.SerializerMethodField()
-    regression = serializers.BooleanField()
-
-    def get_results(self, obj):
-        return miner(obj).get_results()
-
-
-class TestResultRead(serializers.ModelSerializer):
-    modified_at = serializers.DateTimeField(required=False)
-
-    class Meta:
-        model = models.TestResult
-        read_only_fields = ('created_at',)
-
-
 class TestResult(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
-    modified_at = serializers.DateTimeField(required=False,
-                                            format=datetime_format,
-                                            input_formats=[datetime_format])
+    modified_at = serializers.DateTimeField(
+        required=False,
+        format=datetime_format,
+        input_formats=[datetime_format])
 
     class Meta:
         model = models.TestResult
-        fields = ('status', 'modified_at')
-        read_only_fields = ('created_at',)
+        read_only_fields = ('test_job', 'name', 'created_at', 'modified_by')
+
+    def to_representation(self, obj):
+        data = super(TestResult, self).to_representation(obj)
+        if not obj.test_job.run_definition:
+            return data
+        if 'tests' not in obj.test_job.run_definition.data:
+            return data
+
+        data.update(obj.test_job.run_definition.data['tests'][obj.name])
+        return data
 
     def validate(self, data):
         data['modified_by'] = self.context['request'].user
@@ -106,3 +80,25 @@ class TestResult(serializers.ModelSerializer):
             'status': self.instance.status,
             'user': User(self.context['request'].user).data
         })
+
+
+class TestJob(serializers.ModelSerializer):
+    definition = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=models.Definition.objects.all())
+
+    class Meta:
+        model = models.TestJob
+        read_only_fields = ('id', 'run_definition', 'created_at')
+
+
+class TestJobRead(TestJob):
+
+    class TestExecution(serializers.ModelSerializer):
+        class Meta:
+            model = models.TestExecution
+
+    test_execution = TestExecution()
+    run_definition = RunDefinition()
+    regression = serializers.BooleanField()
+    results = TestResult(many=True, source="tests_results")

@@ -61,11 +61,7 @@ class TestResult(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     lookup_field = ('test_job', 'name')
     lookup_value_regex = ('[^/.]+', '.+')
-
-    def get_serializer_class(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return serializers.TestResult
-        return serializers.TestResultRead
+    serializer_class = serializers.TestResult
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())

@@ -56,6 +56,16 @@ class TestTestJob(APITestCase):
             self.assertEqual(models.RunDefinition.objects.count(), 1)
             self.assertEqual(models.TestResult.objects.count(), 2)
 
+    def test_get_with_results(self):
+        test_job = G(models.TestJob, kind="automatic")
+        G(models.TestResult, test_job=test_job, name="things/with/urls1.yaml")
+        G(models.TestResult, test_job=test_job, name="things/with/urls2.yaml")
+
+        response = self.client.get('/api/test-job/%s/' % test_job.pk)
+
+        self.assertEqual(len(response.data['results']), 2)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_get_with_permissions_1(self):
         G(models.TestJob, private=True)
         G(models.TestJob, private=True)
