@@ -7,9 +7,41 @@
       {{ test.metadata.description }}
     </div>
 
-    <div>
-      <span ng-show="test.modified_by">by <b>{{ test.modified_by.username }}</b></span>
+    <div class="conflict" ng-show="conflict">
+      <span class="text">
+      	Conflict with status "{{ conflict.old_status[0] }}"
+      	by "{{ conflict.user[0].username }}"
+      </span>
+      <button type="button" class="btn btn-sm btn-warning"
+	      ng-click="forceSetStatus(test, conflict.new_status[0])">
+      	Proceed?
+      </button>
+    </div>
+
+    <div ng-hide="conflict">
+      <span ng-show="test.modified_by">
+	by <b>{{ test.modified_by.username }}</b>
+      </span>
+
       <div class="btn-group" role="group">
+      	<div class="btn-group btn-group-sm" role="group">
+      	  <button type="button" class="btn btn-success"
+      		  ng-class="{'active': test.status == 'pass'}"
+      		  ng-click="setStatus(test, 'pass')">Pass</button>
+      	</div>
+      	<div class="btn-group btn-group-sm" role="group">
+      	  <button type="button" class="btn btn-warning"
+      		  ng-class="{'active': test.status == 'skip'}"
+      		  ng-click="setStatus(test, 'skip')">Skip</button>
+      	</div>
+      	<div class="btn-group btn-group-sm" role="group">
+      	  <button type="button" class="btn btn-danger"
+      		  ng-class="{'active': test.status == 'fail'}"
+      		  ng-click="setStatus(test, 'fail')">Fail</button>
+      	</div>
+      </div>
+
+      <div class="btn-group" role="group" ng-hide="true">
 	<div class="btn-group btn-group-sm" role="group">
       	  <button type="button" class="btn btn-success"
       		  ng-class="{'active': test.status == 'pass'}"

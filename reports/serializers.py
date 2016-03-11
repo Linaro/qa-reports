@@ -64,6 +64,9 @@ class TestResult(serializers.ModelSerializer):
     def validate(self, data):
         data['modified_by'] = self.context['request'].user
 
+        if self.instance.modified_by == data['modified_by']:
+            return data
+
         modified_at = data.pop('modified_at', None)
         if not modified_at:
             return data
@@ -78,7 +81,8 @@ class TestResult(serializers.ModelSerializer):
             return data
 
         raise serializers.ValidationError({
-            'status': self.instance.status,
+            'new_status': data['status'],
+            'old_status': self.instance.status,
             'user': User(self.context['request'].user).data
         })
 

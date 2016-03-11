@@ -160,15 +160,15 @@ class TestResult(APITestCase):
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
         modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
-
         data = {'status': 'pass', 'modified_at': modified_at}
 
         response = self.client.put(url, data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.put(url, data, format='json')
+        self.user = G(get_user_model(), username="tripbit2")
+        self.client.force_authenticate(user=self.user)
 
+        response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_collision_2(self):
@@ -182,13 +182,33 @@ class TestResult(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        self.user = G(get_user_model(), username="tripbit2")
+        self.client.force_authenticate(user=self.user)
+
         data = {'status': 'fail', 'modified_at': modified_at}
         response = self.client.put(url, data, format='json')
 
-        self.assertTrue(response.data['status'][0], 'pass')  # previous status as an error
+        self.assertTrue(response.data['old_status'][0], 'pass')
+        self.assertTrue(response.data['new_status'][0], 'fail')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_collision_3(self):
+        test_result = G(models.TestResult, name="test_name")
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+
+        modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
+
+        data = {'status': 'pass', 'modified_at': modified_at}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = {'status': 'fail', 'modified_at': modified_at}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_collision_4(self):
         test_result = G(models.TestResult, name="test_name")
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
@@ -201,4 +221,3 @@ class TestResult(APITestCase):
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-

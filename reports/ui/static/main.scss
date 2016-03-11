@@ -221,6 +221,14 @@ table {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			.conflict {
+				.text {
+					font-size: 12px;
+					padding: 0 7px;
+				}
+				background: red;
+				height: 35px;
+			}
 		}
 		.panel-body {
 		   	font-family: 'Inconsolata';

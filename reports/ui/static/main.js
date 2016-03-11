@@ -182,6 +182,19 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
         return '';
     };
 
+    $scope.forceSetStatus = function(test, status) {
+        var data = {
+            status: test.status === status ? null : status
+        };
+
+        API.put("test-result/" + $state.params.id + '/' + test.name, data)
+            .success(function(data) {
+                angular.copy(data, test);
+                $scope.conflict = null;
+            });
+    };
+
+
     $scope.setStatus = function(test, status) {
         var data = {
             status: test.status === status ? null : status,
@@ -191,6 +204,9 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
         API.put("test-result/" + $state.params.id + '/' + test.name, data)
             .success(function(data) {
                 angular.copy(data, test);
+            })
+            .error(function(data) {
+                $scope.conflict = data;
             });
     };
 });
