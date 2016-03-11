@@ -67,7 +67,7 @@ class TestJobRead(TestJob):
         return miner(obj).get_results()
 
 
-class TestResult(serializers.ModelSerializer):
+class TestResultRead(serializers.ModelSerializer):
     modified_at = serializers.DateTimeField(required=False)
 
     class Meta:
@@ -75,7 +75,7 @@ class TestResult(serializers.ModelSerializer):
         read_only_fields = ('created_at',)
 
 
-class TestResultUpdate(serializers.ModelSerializer):
+class TestResult(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
     modified_at = serializers.DateTimeField(required=False,
                                             format=datetime_format,

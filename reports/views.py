@@ -64,8 +64,8 @@ class TestResult(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
-            return serializers.TestResultUpdate
-        return serializers.TestResult
+            return serializers.TestResult
+        return serializers.TestResultRead
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
