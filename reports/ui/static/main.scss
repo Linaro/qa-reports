@@ -216,11 +216,15 @@ table {
 	}
 
 	.panel {
+		margin-bottom: 0;
 		.panel-heading {
 			padding: 0px 0px 0px 10px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			.toggle {
+				cursor: pointer;
+			}
 			.conflict {
 				.text {
 					font-size: 12px;

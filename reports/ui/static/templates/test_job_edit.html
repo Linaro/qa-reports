@@ -3,7 +3,7 @@
 <div class="panel panel-default" ng-repeat="test in data.results"
      ng-class="cssStatusClass(test)">
   <div class="panel-heading">
-    <div>
+    <div ng-click="test.show = !test.show" class="toggle">
       {{ test.metadata.description }}
     </div>
 
@@ -61,7 +61,7 @@
     </div>
 
   </div>
-  <div class="panel-body">
+  <div class="panel-body" ng-show="test.show">
     <ol>
       <li ng-repeat="step in test.steps">{{ step }}</li>
     </ol>
