@@ -1,14 +1,15 @@
 <hr />
-<!-- {{ data.results }} -->
+
 <div class="panel panel-default" ng-repeat="test in data.results"
      ng-class="cssStatusClass(test)">
   <div class="panel-heading">
-    
-    <span ng-show="test.modified_by">by <b>{{ test.modified_by }}</b></span>
-    {{ test.metadata.description }} / {{ test.name }}
+    <div>
+      {{ test.metadata.description }}
+    </div>
 
-    <div class="pull-right">
-      <div class="btn-group pull-right" role="group">
+    <div>
+      <span ng-show="test.modified_by">by <b>{{ test.modified_by.username }}</b></span>
+      <div class="btn-group" role="group">
 	<div class="btn-group btn-group-sm" role="group">
       	  <button type="button" class="btn btn-success"
       		  ng-class="{'active': test.status == 'pass'}"
@@ -26,9 +27,9 @@
 	</div>
       </div>
     </div>
+
   </div>
   <div class="panel-body">
-    {{ test }}
     <ol>
       <li ng-repeat="step in test.steps">{{ step }}</li>
     </ol>

@@ -183,13 +183,15 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
     };
 
     $scope.setStatus = function(test, status) {
-        var data = {status: status, modified_at: test.modified_at};
-        API.put("test-result/" + $state.params.id + '/' + test.name, data);
-        if (test.status == status) {
-            test.status = null;
-        } else {
-            test.status = status;
-        }
+        var data = {
+            status: test.status === status ? null : status,
+            modified_at: test.modified_at
+        };
+
+        API.put("test-result/" + $state.params.id + '/' + test.name, data)
+            .success(function(data) {
+                angular.copy(data, test);
+            });
     };
 });
 
