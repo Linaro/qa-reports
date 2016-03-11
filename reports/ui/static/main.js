@@ -190,7 +190,6 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
         API.put("test-result/" + $state.params.id + '/' + test.name, data)
             .success(function(data) {
                 angular.copy(data, test);
-                $scope.conflict = null;
             });
     };
 
@@ -206,7 +205,7 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
                 angular.copy(data, test);
             })
             .error(function(data) {
-                $scope.conflict = data;
+                test.conflict = data;
             });
     };
 });

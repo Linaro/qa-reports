@@ -7,18 +7,18 @@
       {{ test.metadata.description }}
     </div>
 
-    <div class="conflict" ng-show="conflict">
+    <div class="conflict" ng-show="test.conflict">
       <span class="text">
-      	Conflict with status "{{ conflict.old_status[0] }}"
-      	by "{{ conflict.user[0].username }}"
+      	Conflict with status "{{ test.conflict.old_status[0] }}"
+      	by "{{ test.conflict.user[0].username }}"
       </span>
       <button type="button" class="btn btn-sm btn-warning"
-	      ng-click="forceSetStatus(test, conflict.new_status[0])">
+	      ng-click="forceSetStatus(test, test.conflict.new_status[0])">
       	Proceed?
       </button>
     </div>
 
-    <div ng-hide="conflict">
+    <div ng-hide="test.conflict">
       <span ng-show="test.modified_by">
 	by <b>{{ test.modified_by.username }}</b>
       </span>
