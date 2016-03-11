@@ -41,6 +41,7 @@ class RunDefinition(serializers.ModelSerializer):
 
 class TestResult(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
+    modified_by = User(required=False)
     modified_at = serializers.DateTimeField(
         required=False,
         format=datetime_format,
