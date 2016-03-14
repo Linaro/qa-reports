@@ -21,7 +21,10 @@ class TestDefinition(TestCase):
 
         with patch('reports.miner.manual.tests') as miner_tests:
             miner_tests.return_value = mock_test
-            definition.create_job(test_execution)
+            models.TestJob.objects.create(
+                definition=definition,
+                test_execution=test_execution
+            )
 
         self.assertEqual(models.TestJob.objects.count(), 1)
         self.assertEqual(models.RunDefinition.objects.count(), 1)

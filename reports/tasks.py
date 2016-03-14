@@ -88,8 +88,11 @@ def testjob_automatic_create(self):
                  .exclude(test_jobs__run_definition__definition=definition))
 
     for test_execution in to_deploy:
-        test_definition = Definition.objects.get(kind=Definition.AUTOMATIC)
-        test_job = test_definition.create_job(test_execution)
+        definition = Definition.objects.get(kind=Definition.AUTOMATIC)
+        test_job = TestJob.objects.create(
+            definition=definition,
+            test_execution=test_execution
+        )
 
         logger.info("TestJob %s, for %s deployed" % (test_job, test_execution))
 

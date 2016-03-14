@@ -58,12 +58,6 @@ class Definition(models.Model):
     kind = models.CharField(max_length=256, choices=KIND_CHOICES)
     created_at = models.DateTimeField(default=timezone.now)
 
-    def create_job(self, test_execution):
-        return TestJob.objects.create(
-            definition=self,
-            test_execution=test_execution
-        )
-
     class Meta:
         ordering = ['-created_at']
 
