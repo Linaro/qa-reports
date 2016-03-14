@@ -10,7 +10,7 @@
     </h3>
   </div>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped" ng-class="{'table-hover': user}">
     <thead>
       <tr>
 	<th>name</th>
@@ -19,11 +19,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="item in page.results">
-	<td ui-sref="testplan-detail({id: item.id})">{{ item.name }}</td>
+      
+      <tr ng-if="user" ng-repeat="item in page.results" ui-sref="testplan-detail({id: item.id})">
+	<td>{{ item.name }}</td>
 	<td class="text-right">{{ item.data.tests.length || 0 }}</td>
 	<td class="text-right">{{ item.test_jobs.length || 0 }}</td>
       </tr>
+
+      <tr ng-if="!user" ng-repeat="item in page.results">
+	<td>{{ item.name }}</td>
+	<td class="text-right">{{ item.data.tests.length || 0 }}</td>
+	<td class="text-right">{{ item.test_jobs.length || 0 }}</td>
+      </tr>
+
     </tbody>
   </table>
   
