@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_PAGINATION_CLASS': 'reports.pagination.Pagination',
     'PAGE_SIZE': 30,

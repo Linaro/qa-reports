@@ -1,9 +1,9 @@
-from rest_framework import viewsets
+from rest_framework import mixins
 from rest_framework import filters
+from rest_framework import viewsets
 from rest_framework import response
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework import mixins
 
 from django.contrib import auth
 
@@ -32,7 +32,6 @@ class Definition(viewsets.ModelViewSet):
 class TestExecution(viewsets.ReadOnlyModelViewSet):
     queryset = models.TestExecution.objects.prefetch_related("test_jobs")
     serializer_class = serializers.TestExecution
-
     filter_backends = (filters.SearchFilter,)
     search_fields = ("board", "build_id", "tree", "branch", "kernel", "defconfig", "arch")
 
@@ -42,7 +41,6 @@ class TestJob(viewsets.ModelViewSet):
                 .select_related('test_execution', 'run_definition', 'run_definition__definition')
                 .prefetch_related('tests_results'))
     serializer_class = serializers.TestJob
-
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
     search_fields = ('id', 'status', 'kind', 'test_execution__build_id', 'test_execution__board')
     filter_fields = ('test_execution',)
@@ -58,7 +56,6 @@ class TestJob(viewsets.ModelViewSet):
 
 class TestResult(viewsets.ModelViewSet):
     queryset = models.TestResult.objects.select_related('test_job')
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     lookup_field = ('test_job', 'name')
     lookup_value_regex = ('[^/.]+', '.+')
     serializer_class = serializers.TestResult

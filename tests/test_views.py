@@ -1,9 +1,7 @@
 from mock import patch
 
-from django.contrib.auth import get_user_model
-from django.conf import settings
-
 from django_dynamic_fixture import G
+from django.contrib.auth import get_user_model
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -15,7 +13,6 @@ class TestUser(APITestCase):
 
     def test_get_1(self):
         response = self.client.get('/api/user/')
-
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_2(self):
@@ -49,6 +46,7 @@ class TestTestJob(APITestCase):
                 "test_execution": test_execution.id
             }
 
+            self.client.force_authenticate(user=G(get_user_model()))
             response = self.client.post('/api/test-job/', data, format='json')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -108,6 +106,7 @@ class TestTestJob(APITestCase):
         data = {'notes': 'a text'}
         url = '/api/test-job/%s/' % test_job.id
 
+        self.client.force_authenticate(user=G(get_user_model()))
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
