@@ -1,5 +1,3 @@
-from django.utils.translation import ugettext_lazy as _
-
 from django.contrib import admin
 from django.contrib import auth
 
@@ -18,15 +16,17 @@ class PermissionsInline(admin.TabularInline):
 class UserAdmin(auth.admin.UserAdmin):
     inlines = (PermissionsInline,)
     list_display = ('username', 'email', 'is_superuser')
-    readonly_fields = ('last_login', 'date_joined')
-    list_filter = ('is_superuser', 'is_active', 'groups')
+    readonly_fields = ('last_login', 'date_joined', 'groups')
+    list_filter = ('is_superuser', 'is_active')
     fieldsets = (
-        (None, {'fields': ('username', 'password', 'email', 'first_name',
-                           'last_name', 'last_login', 'date_joined')}),
-        (_('Access rights'), {'fields': ('is_active', 'is_superuser')}),
+        (None, {
+            'fields': ('username', 'password', 'email', 'first_name',
+                       'last_name', 'last_login', 'date_joined')
+        }),
+        ('Access rights', {'fields': ('groups', 'is_active', 'is_superuser')}),
     )
 
-# admin.site.unregister(auth.models.Group)
+admin.site.unregister(auth.models.Group)
 admin.site.unregister(auth.models.User)
 admin.site.register(auth.models.User, UserAdmin)
 
