@@ -51,6 +51,10 @@ class TestResult(serializers.ModelSerializer):
         model = models.TestResult
         read_only_fields = ('test_job', 'name', 'created_at', 'modified_by')
 
+    @property
+    def errors(self):
+        return {k: v[0] for k, v in super(TestResult, self).errors.items()}
+
     def to_representation(self, obj):
         data = super(TestResult, self).to_representation(obj)
         if not obj.test_job.run_definition:
