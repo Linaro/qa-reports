@@ -78,11 +78,12 @@ class manual(object):
     def __init__(self, test_job):
         self.test_job = test_job
 
-    def repo(self):
-        return git.Repo(settings.EXT_REPOSITORY["manual-test-definitions"]['location'])
-
     def id(self):
         return str(uuid.uuid4()).replace('-', '')
+
+    @classmethod
+    def repo(self):
+        return git.Repo(settings.EXT_REPOSITORY["manual-test-definitions"]['location'])
 
     @classmethod
     def sha(self):
