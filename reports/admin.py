@@ -26,7 +26,7 @@ class UserAdmin(auth.admin.UserAdmin):
         (_('Access rights'), {'fields': ('is_active', 'is_superuser')}),
     )
 
-admin.site.unregister(auth.models.Group)
+# admin.site.unregister(auth.models.Group)
 admin.site.unregister(auth.models.User)
 admin.site.register(auth.models.User, UserAdmin)
 
