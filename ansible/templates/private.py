@@ -8,7 +8,7 @@ AUTH_CROWD_APPLICATION_PASSWORD = '{{crowd_pass}}'
 AUTH_CROWD_SERVER_REST_URI = '{{crowd_rest_uri}}'
 
 AUTHENTICATION_BACKENDS = (
-    'crowdrest.backend.CrowdRestBackend',
+    'crowd.backend.CrowdBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
