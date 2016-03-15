@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "compressor",
     'djcelery',
+    'crowd',
 
     'reports',
     'reports.ui',
@@ -138,6 +139,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'crowd': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'celery': {
             'handlers': ['console'],
             'level': 'INFO',
