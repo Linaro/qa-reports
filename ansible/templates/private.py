@@ -24,7 +24,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
-    'crowd',
+    'crowd_auth',
 )
 
 AUTHENTICATION_BACKENDS = (
