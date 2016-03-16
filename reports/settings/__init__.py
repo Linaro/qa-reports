@@ -78,13 +78,13 @@ STATIC_URL = '/static/'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'reports.auth.Permissions',
+    ),
     'DATETIME_FORMAT': "%H:%M:%S %d-%m-%Y",
     'DATETIME_INPUT_FORMATS': ["%H:%M:%S", "%H:%M:%S %d-%m-%Y"],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_PAGINATION_CLASS': 'reports.pagination.Pagination',
     'PAGE_SIZE': 30,
@@ -173,3 +173,6 @@ DDF_FIELD_FIXTURES = {
         'ddf_fixture': lambda: []
     },
 }
+
+ACCESS_GROUP = 'linaro-qa-reports-access'
+EDIT_GROUP = 'linaro-qa-reports-edit'

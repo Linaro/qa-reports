@@ -2,6 +2,8 @@ from mock import patch
 
 from django_dynamic_fixture import G
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.conf import settings
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -27,6 +29,9 @@ class TestUser(APITestCase):
 
 class TestTestJob(APITestCase):
 
+    def setUp(self):
+        self.client.force_authenticate(user=G(get_user_model(), is_superuser=True))
+
     def test_create(self):
         mock_test = {
             'some_test_1.yaml': {'steps': [], 'expected': []},
@@ -45,8 +50,6 @@ class TestTestJob(APITestCase):
                 "definition": definition.id,
                 "test_execution": test_execution.id
             }
-
-            self.client.force_authenticate(user=G(get_user_model()))
             response = self.client.post('/api/test-job/', data, format='json')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -64,20 +67,25 @@ class TestTestJob(APITestCase):
         self.assertEqual(len(response.data['results']), 2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_update_notes(self):
+        test_job = G(models.TestJob, kind='automatic')
+
+        data = {'notes': 'a text'}
+        url = '/api/test-job/%s/' % test_job.id
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(models.TestJob.objects.get().notes, data['notes'])
+
+
+class TestTestJobPermission(APITestCase):
+
     def test_get_with_permissions_1(self):
         G(models.TestJob, private=True)
         G(models.TestJob, private=True)
 
-        response = self.client.get('/api/test-job/')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 0)
-
-    def test_get_with_permissions_2(self):
-        G(models.TestJob, private=True)
-        G(models.TestJob, private=True)
-
-        user = G(get_user_model())
+        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
 
         self.client.force_authenticate(user=user)
         response = self.client.get('/api/test-job/')
@@ -85,11 +93,23 @@ class TestTestJob(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 0)
 
+    def test_get_with_permissions_2(self):
+        G(models.TestJob, private=False)
+        G(models.TestJob, private=False)
+
+        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
+
+        self.client.force_authenticate(user=user)
+        response = self.client.get('/api/test-job/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
+
     def test_get_with_permissions_3(self):
         G(models.TestJob, test_execution__branch='test_1', private=True, kind="automatic")
         G(models.TestJob, test_execution__branch='test_2', private=True, kind="automatic")
 
-        user = G(get_user_model())
+        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
 
         G(models.Permission, user=user, field='test_execution__branch', value='test_1')
         G(models.Permission, user=user, field='test_execution__branch', value='test_2')
@@ -100,28 +120,26 @@ class TestTestJob(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
-    def test_update_notes(self):
-        test_job = G(models.TestJob, kind='automatic')
-
-        data = {'notes': 'a text'}
-        url = '/api/test-job/%s/' % test_job.id
-
-        self.client.force_authenticate(user=G(get_user_model()))
-        response = self.client.patch(url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(models.TestJob.objects.get().notes, data['notes'])
-
 
 class TestResult(APITestCase):
 
     def setUp(self):
-        self.user = G(get_user_model(), username="tripbit")
-        self.client.force_authenticate(user=self.user)
+        access_group = G(Group, name=settings.ACCESS_GROUP)
+        edit_group = G(Group, name=settings.EDIT_GROUP)
+
+        self.user_1 = G(get_user_model(), name="tripbit1", groups=[
+            access_group, edit_group
+        ])
+        self.user_2 = G(get_user_model(), name="tripbit2", groups=[
+            access_group, edit_group
+        ])
 
     def test_read(self):
         test_result = G(models.TestResult, name="things/with/urls.yaml")
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+
+        self.client.force_authenticate(user=self.user_1)
+
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -132,6 +150,8 @@ class TestResult(APITestCase):
 
         data = {'status': 'pass'}
 
+        self.client.force_authenticate(user=self.user_1)
+
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -139,7 +159,7 @@ class TestResult(APITestCase):
         test_result = models.TestResult.objects.get()
 
         self.assertEqual(test_result.status, 'pass')
-        self.assertEqual(test_result.modified_by, self.user)
+        self.assertEqual(test_result.modified_by, self.user_1)
 
     def test_update_2(self):
         original_name = "things/with/urls.yaml"
@@ -147,6 +167,8 @@ class TestResult(APITestCase):
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
         data = {'status': 'pass', 'name': 'things'}
+
+        self.client.force_authenticate(user=self.user_1)
 
         response = self.client.put(url, data, format='json')
 
@@ -161,11 +183,12 @@ class TestResult(APITestCase):
         modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
         data = {'status': 'pass', 'modified_at': modified_at}
 
+        self.client.force_authenticate(user=self.user_1)
         response = self.client.put(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.user = G(get_user_model(), username="tripbit2")
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user_2)
 
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -177,14 +200,13 @@ class TestResult(APITestCase):
         modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
 
         data = {'status': 'pass', 'modified_at': modified_at}
+        self.client.force_authenticate(user=self.user_1)
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.user = G(get_user_model(), username="tripbit2")
-        self.client.force_authenticate(user=self.user)
-
         data = {'status': 'fail', 'modified_at': modified_at}
+        self.client.force_authenticate(user=self.user_2)
         response = self.client.put(url, data, format='json')
 
         self.assertTrue(response.data['old_status'][0], 'pass')
@@ -198,6 +220,7 @@ class TestResult(APITestCase):
         modified_at = test_result.modified_at.strftime("%H:%M:%S %d-%m-%Y.%f")
 
         data = {'status': 'pass', 'modified_at': modified_at}
+        self.client.force_authenticate(user=self.user_1)
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -212,6 +235,7 @@ class TestResult(APITestCase):
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
 
         data = {'status': 'pass'}
+        self.client.force_authenticate(user=self.user_1)
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
