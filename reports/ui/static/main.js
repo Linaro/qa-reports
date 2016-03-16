@@ -91,7 +91,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             },
             responseError: function(response) {
                 if (response.status === 401 && response.config.url !== "/api/user/") {
-                    $injector.get('$state').go('index', {}, {location: 'replace'});
+                    $injector.get('$state').go('login', {}, {location: 'replace'});
                 }
                 if (response.status === 404) {
                     $injector.get('$state').go('404', {}, {location: 'replace'});
