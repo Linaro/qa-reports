@@ -173,5 +173,5 @@ DDF_FIELD_FIXTURES = {
     },
 }
 
-ACCESS_GROUP = 'linaro-qa-reports-access'
-EDIT_GROUP = 'linaro-qa-reports-edit'
+ACCESS_GROUP = 'linaro-lava-access'
+EDIT_GROUP = 'linaro-lava-access'
