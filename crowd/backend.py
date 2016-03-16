@@ -112,6 +112,11 @@ class CrowdBackend(object):
 
         if response.status_code == 200:
             return True
+        if response.status_code == 401:
+            logger.error(
+                "Unauthorized access to application check "
+                "'AUTH_CROWD_APPLICATION_USER' and "
+                "AUTH_CROWD_APPLICATION_PASSWORD'")
         if response.status_code == 400:
             message = ", ".join(response.json().values())
             logger.info("Authenticate '%s' failed: %s" % (username, message))
