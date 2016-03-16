@@ -20,7 +20,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "compressor",
     'djcelery',
-    'crowd',
 
     'reports',
     'reports.ui',
@@ -79,7 +78,7 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'reports.auth.Permissions',
+        'reports.permissions.Permissions',
     ),
     'DATETIME_FORMAT': "%H:%M:%S %d-%m-%Y",
     'DATETIME_INPUT_FORMATS': ["%H:%M:%S", "%H:%M:%S %d-%m-%Y"],

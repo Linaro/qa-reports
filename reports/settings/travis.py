@@ -18,3 +18,7 @@ STATIC_ROOT = '/tmp/qa-reports/static'
 AUTH_CROWD_SERVER_REST_URI = 'http://localhost:8000'
 AUTH_CROWD_APPLICATION_USER = 'demo'
 AUTH_CROWD_APPLICATION_PASSWORD = 'demo'
+
+INSTALLED_APPS += (
+    'crowd',
+)

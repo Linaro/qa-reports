@@ -7,10 +7,6 @@ AUTH_CROWD_APPLICATION_USER = '{{crowd_user}}'
 AUTH_CROWD_APPLICATION_PASSWORD = '{{crowd_pass}}'
 AUTH_CROWD_SERVER_REST_URI = '{{crowd_rest_uri}}'
 
-AUTHENTICATION_BACKENDS = (
-    'crowd.backend.CrowdBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
 
 KERNELCI_TOKEN = "{{ kernelci_token }}"
 SECRET_KEY = "{{ secret_key }}"
@@ -26,6 +22,15 @@ DATABASES = {
         'HOST': '{{db_host}}',
     }
 }
+
+INSTALLED_APPS += (
+    'crowd',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'reports.auth.Backend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 CREDENTIALS = {
     "{{ testjob_host }}": (
@@ -49,19 +54,3 @@ EXT_REPOSITORY = {
         "git": "https://git.linaro.org/qa/manual-test-definitions.git"
     }
 }
-
-# LOGGING['handlers']['mail_admins'] = {
-#     'include_html': True,
-#     'level': 'ERROR',
-#     'class': 'django.utils.log.AdminEmailHandler'
-# }
-
-# LOGGING['handlers']['file'] = {
-#     'level': 'DEBUG',
-#     'class': 'logging.handlers.TimedRotatingFileHandler',
-#     'filename': '{{logs_base}}/django.log',
-#     'backupCount': 5,
-#     'when': 'midnight',
-#     'encoding': 'utf8',
-#     'formatter': 'verbose',
-# }
