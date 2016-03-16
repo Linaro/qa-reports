@@ -77,7 +77,7 @@ class CrowdBackend(object):
     def crowd_user(self, username):
         logger.debug("Fetching details of '%s'..." % username)
 
-        url = "%s/user.json?username=%s" % (
+        url = "%suser.json?username=%s" % (
             crowd.AUTH_CROWD_SERVER_REST_URI,
             username
         )
@@ -90,7 +90,7 @@ class CrowdBackend(object):
 
     def crowd_get_groups(self, username):
 
-        url = "%s/user/group/nested.json?username=%s" % (
+        url = "%suser/group/nested.json?username=%s" % (
             crowd.AUTH_CROWD_SERVER_REST_URI,
             username
         )
@@ -103,7 +103,7 @@ class CrowdBackend(object):
 
     def crowd_authentication(self, username, password):
 
-        url = "%s/authentication.json?username=%s" % (
+        url = "%sauthentication.json?username=%s" % (
             crowd.AUTH_CROWD_SERVER_REST_URI,
             username
         )

@@ -17,6 +17,9 @@ if not AUTH_CROWD_APPLICATION_PASSWORD:
     raise exceptions.ImproperlyConfigured(
         'django-crowd-auth: AUTH_CROWD_APPLICATION_PASSWORD missing in settings')
 
+if not AUTH_CROWD_SERVER_REST_URI.endswith('/'):
+    AUTH_CROWD_SERVER_REST_URI = "%s/" % AUTH_CROWD_SERVER_REST_URI
+
 AUTH_CROWD_ALWAYS_UPDATE_USER = getattr(settings, 'AUTH_CROWD_ALWAYS_UPDATE_USER', False)
 AUTH_CROWD_ALWAYS_UPDATE_GROUPS = getattr(settings, 'AUTH_CROWD_ALWAYS_UPDATE_GROUPS', True)
 AUTH_CROWD_GROUP_MAP = getattr(settings, 'AUTH_CROWD_GROUP_MAP', {})
