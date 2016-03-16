@@ -20,5 +20,5 @@ AUTH_CROWD_APPLICATION_USER = 'demo'
 AUTH_CROWD_APPLICATION_PASSWORD = 'demo'
 
 INSTALLED_APPS += (
-    'crowd',
+    'crowd_auth',
 )
