@@ -3,12 +3,16 @@ from mock import patch
 from django_dynamic_fixture import G
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.test import override_settings
 from django.conf import settings
 
 from rest_framework.test import APITestCase
 from rest_framework import status
 
 from reports import models
+
+ACCESS_GROUP = "access_group"
+EDIT_GROUP = "edit_group"
 
 
 class TestUser(APITestCase):
@@ -79,13 +83,14 @@ class TestTestJob(APITestCase):
         self.assertEqual(models.TestJob.objects.get().notes, data['notes'])
 
 
+@override_settings(ACCESS_GROUP=ACCESS_GROUP)
 class TestTestJobPermission(APITestCase):
 
     def test_get_with_permissions_1(self):
         G(models.TestJob, private=True)
         G(models.TestJob, private=True)
 
-        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
+        user = G(get_user_model(), groups=[G(Group, name=ACCESS_GROUP)])
 
         self.client.force_authenticate(user=user)
         response = self.client.get('/api/test-job/')
@@ -97,7 +102,7 @@ class TestTestJobPermission(APITestCase):
         G(models.TestJob, private=False)
         G(models.TestJob, private=False)
 
-        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
+        user = G(get_user_model(), groups=[G(Group, name=ACCESS_GROUP)])
 
         self.client.force_authenticate(user=user)
         response = self.client.get('/api/test-job/')
@@ -109,7 +114,7 @@ class TestTestJobPermission(APITestCase):
         G(models.TestJob, test_execution__branch='test_1', private=True, kind="automatic")
         G(models.TestJob, test_execution__branch='test_2', private=True, kind="automatic")
 
-        user = G(get_user_model(), groups=[G(Group, name=settings.ACCESS_GROUP)])
+        user = G(get_user_model(), groups=[G(Group, name=ACCESS_GROUP)])
 
         G(models.Permission, user=user, field='test_execution__branch', value='test_1')
         G(models.Permission, user=user, field='test_execution__branch', value='test_2')
@@ -121,11 +126,13 @@ class TestTestJobPermission(APITestCase):
         self.assertEqual(response.data['count'], 2)
 
 
+@override_settings(ACCESS_GROUP=ACCESS_GROUP)
+@override_settings(EDIT_GROUP=EDIT_GROUP)
 class TestResult(APITestCase):
 
     def setUp(self):
-        access_group = G(Group, name=settings.ACCESS_GROUP)
-        edit_group = G(Group, name=settings.EDIT_GROUP)
+        access_group = G(Group, name=ACCESS_GROUP)
+        edit_group = G(Group, name=EDIT_GROUP)
 
         self.user_1 = G(get_user_model(), name="tripbit1", groups=[
             access_group, edit_group
