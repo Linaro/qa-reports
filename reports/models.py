@@ -208,9 +208,9 @@ class Permission(models.Model):
 
 
 class Issue(models.Model):
-    user = models.ForeignKey('TestResult',
-                             related_name="bugs",
-                             on_delete=models.CASCADE)
+    test_job = models.ForeignKey('TestJob',
+                                 related_name="bugs",
+                                 on_delete=models.CASCADE)
 
     kind = models.CharField(max_length=64)
     remote_id = models.CharField(max_length=256)
