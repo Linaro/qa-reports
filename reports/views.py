@@ -68,6 +68,11 @@ class TestResult(viewsets.ModelViewSet):
         return obj
 
 
+class Issue(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = models.Issue.objects.all()
+    serializer_class = serializers.Issue
+
+
 class TestManual(viewsets.ViewSet):
 
     def list(self, request):

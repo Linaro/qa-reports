@@ -111,3 +111,8 @@ class TestJobRead(TestJob):
     run_definition = RunDefinition()
     regression = serializers.BooleanField()
     results = TestResult(many=True, source="tests_results")
+
+
+class Issue(serializers.ModelSerializer):
+    class Meta:
+        model = models.Issue
