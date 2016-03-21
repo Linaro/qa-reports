@@ -251,3 +251,39 @@ class TestResult(APITestCase):
         response = self.client.put(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestIssue(APITestCase):
+
+    def setUp(self):
+        self.client.force_authenticate(user=G(get_user_model(), is_superuser=True))
+
+    def test_create(self):
+        test_result = G(models.TestResult, name="test-1")
+
+        data = {
+            'kind': 'github',
+            "remote_id": "1",
+            "test_result": test_result.id
+        }
+
+        response = self.client.post('/api/issue/', data, format='json')
+
+        self.assertNotEqual(response.data['remote_url'], '')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(models.Issue.objects.count(), 1)
+
+    def test_create_bad_kind(self):
+        test_result = G(models.TestResult, name="test-1")
+
+        data = {
+            'kind': "i don't exist",
+            "remote_id": "1",
+            "test_result": test_result.id
+        }
+
+        response = self.client.post('/api/issue/', data, format='json')
+
+        self.assertTrue('kind' in response.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(models.Issue.objects.count(), 0)

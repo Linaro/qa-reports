@@ -150,7 +150,9 @@ class TestResult(models.Model):
 
     created_at = models.DateTimeField(default=timezone.now)
     modified_at = models.DateTimeField(auto_now=True)
-    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    null=True,
+                                    on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-created_at']
@@ -208,9 +210,9 @@ class Permission(models.Model):
 
 
 class Issue(models.Model):
-    test_job = models.ForeignKey('TestJob',
-                                 related_name="bugs",
-                                 on_delete=models.CASCADE)
+    test_result = models.ForeignKey('TestResult',
+                                    related_name="issues",
+                                    on_delete=models.CASCADE)
 
     kind = models.CharField(max_length=64)
     remote_id = models.CharField(max_length=256)

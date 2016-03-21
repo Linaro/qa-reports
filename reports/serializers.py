@@ -1,6 +1,10 @@
+import pyclbr
+import importlib
+
 from rest_framework import serializers
 
 from django.contrib import auth
+from reports import issues
 
 from . import models
 
@@ -113,6 +117,25 @@ class TestJobRead(TestJob):
     results = TestResult(many=True, source="tests_results")
 
 
+def register_issues():
+    klasses = [getattr(issues, a.name) for a in
+               pyclbr.readmodule('reports.issues').values()]
+
+    return {a.name: a for a in klasses
+            if issubclass(a, issues.BaseIssue) and a != issues.BaseIssue}
+
+
 class Issue(serializers.ModelSerializer):
+    issues = register_issues()
+
     class Meta:
         model = models.Issue
+        read_only_fields = ('remote_url', )
+
+    def validate(self, data):
+        if data['kind'] not in self.issues:
+            raise serializers.ValidationError("kind '%s' not recognized" % data['kind'])
+        issue = self.issues[data['kind']](data['remote_id'])
+        remote_url = issue()
+        data['remote_url'] = remote_url
+        return data
