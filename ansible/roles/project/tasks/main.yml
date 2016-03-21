@@ -24,7 +24,7 @@
     - restart-apache
 
 - name: checkout code - ext
-  git: repo={{git_repo}}
+  git: repo="https://git.linaro.org/qa/manual-test-definitions.git"
        dest={{ ext_base }}/manual-test-definitions
        update=yes
        ssh_opts="-o StrictHostKeyChecking=no"
