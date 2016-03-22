@@ -215,5 +215,8 @@ class Issue(models.Model):
                                     on_delete=models.CASCADE)
 
     kind = models.CharField(max_length=64)
-    remote_id = models.CharField(max_length=256)
-    remote_url = models.URLField()
+
+    number = models.CharField(max_length=256)
+    title = models.CharField(max_length=512)
+    state = models.CharField(max_length=256)
+    url = models.URLField()

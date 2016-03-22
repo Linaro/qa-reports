@@ -4,7 +4,6 @@ from django_dynamic_fixture import G
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.test import override_settings
-from django.conf import settings
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -262,14 +261,16 @@ class TestIssue(APITestCase):
         test_result = G(models.TestResult, name="test-1")
 
         data = {
-            'kind': 'github',
-            "remote_id": "1",
+            'kind': 'kernelci',
+            "number": "12",
             "test_result": test_result.id
         }
 
         response = self.client.post('/api/issue/', data, format='json')
 
-        self.assertNotEqual(response.data['remote_url'], '')
+        self.assertNotEqual(response.data['state'], '')
+        self.assertNotEqual(response.data['url'], '')
+        self.assertNotEqual(response.data['title'], '')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(models.Issue.objects.count(), 1)
 
@@ -278,7 +279,7 @@ class TestIssue(APITestCase):
 
         data = {
             'kind': "i don't exist",
-            "remote_id": "1",
+            "number": "1",
             "test_result": test_result.id
         }
 
