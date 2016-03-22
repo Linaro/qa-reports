@@ -37,6 +37,14 @@ CREDENTIALS = {
         "{{ testjob_user }}",
         "{{ testjob_pass }}"
     ),
+    "{{ bugs_linaro_org_host }}": (
+        "{{ bugs_linaro_org_user }}",
+        "{{ bugs_linaro_org_pass }}"
+    ),
+    "{{ bugs_96boards_org_host }}": (
+        "{{ bugs_96boards_org_user }}",
+        "{{ bugs_96boards_org_pass }}"
+    )
 }
 
 ALLOWED_HOSTS = ['{{ inventory_hostname }}', 'localhost']
