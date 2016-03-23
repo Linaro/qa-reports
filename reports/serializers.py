@@ -1,14 +1,21 @@
 from rest_framework import serializers
 
 from django.contrib import auth
+from django.conf import settings
 
 from . import models
 
 
 class User(serializers.ModelSerializer):
 
+    edit = serializers.SerializerMethodField()
+
+    def get_edit(self, item):
+        return (item.is_superuser or
+                item.groups.filter(name=settings.EDIT_GROUP).exists())
+
     class Meta:
-        fields = ('id', 'username', 'email', 'last_login')
+        fields = ('id', 'username', 'email', 'last_login', 'edit')
         model = auth.models.User
 
 

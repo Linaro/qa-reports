@@ -143,7 +143,7 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
         $scope.data = response.data;
         $scope.loaded = true;
 
-        if ($scope.data.kind === "manual" && $scope.user) {
+        if ($scope.data.kind === "manual" && $scope.user.edit) {
             $state.go('testjob-detail.edit', {}, {location: "replace"});
         } else {
             $state.go('testjob-detail.view', {}, {location: "replace"});
