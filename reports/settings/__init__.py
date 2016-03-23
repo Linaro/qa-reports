@@ -172,4 +172,4 @@ DDF_FIELD_FIXTURES = {
 }
 
 ACCESS_GROUP = 'linaro-lava-access'
-EDIT_GROUP = 'linaro-lava-edit'
+EDIT_GROUP = 'team-qa-services'
