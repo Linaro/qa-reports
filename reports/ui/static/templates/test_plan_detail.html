@@ -40,10 +40,10 @@
 	  <div class="panel-body" ng-show="test.show">
 	    <h6>{{ name }}</h6>
 	    <hr/>
-	    <ol><li ng-repeat="step in test.steps">{{ step }}</li>
+	    <ol><li ng-repeat="step in test.steps track by $index">{{ step }}</li>
 	    </ol>
 	    <hr/>
-	    <ol><li ng-repeat="step in test.expected">{{ step }}</li></ol>
+	    <ol><li ng-repeat="step in test.expected track by $index">{{ step }}</li></ol>
 	  </div>
 	</div>
       </div>
