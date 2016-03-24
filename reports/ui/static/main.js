@@ -83,18 +83,19 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     $httpProvider.interceptors.push(function($q, $injector) {
         return {
             request: function(config) {
-                token = localStorage.getItem('token');
+                var token = localStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = "Token " + token;
                 }
                 return config;
             },
             responseError: function(response) {
-                if (response.status === 401 && response.config.url !== "/api/user/") {
-                    $injector.get('$state').go('login', {}, {location: 'replace'});
+                var $state = $injector.get('$state');
+                if (response.status === 401) {
+                    $state.go('login', {}, {location: 'replace'});
                 }
                 if (response.status === 404) {
-                    $injector.get('$state').go('404', {}, {location: 'replace'});
+                    $state.get('$state').go('404', {}, {location: 'replace'});
                 }
                 return $q.reject(response);
             }
