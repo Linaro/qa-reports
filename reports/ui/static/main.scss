@@ -263,6 +263,15 @@ table.table-hover {
 		z-index: 100;
 		transform: translate(-50%, -50%);
 	}
+	.bugs {
+		.btn-primary {
+			width: 140px;
+		}
+		input, .btn {
+			height: 35px;
+			line-height: 0.5;
+		}
+	}
 }
 
 #test-plan-detail {

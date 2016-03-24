@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap']);
 
 app.factory('API', function($http) {
     return {
@@ -171,6 +171,14 @@ app.controller('TestJob', function($state, $stateParams, $scope, API, $q) {
 });
 
 app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
+
+    $scope.issueSources = API.get('issue-kind').success(function(data) {
+        $scope.issueSources = data;
+    });
+
+    $scope.selectIssueKind = function(source) {
+        $scope.selected = source;
+    };
 
     $scope.cssStatusClass = function(test) {
         if (test.status == 'pass')

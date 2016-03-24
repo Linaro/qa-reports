@@ -62,16 +62,44 @@
 
   </div>
   <div class="panel-body" ng-show="test.show">
-    <ol>
-      <li ng-repeat="step in test.steps">{{ step }}</li>
-    </ol>
+    <div class="row">
+      <div class="col-xs-8">
+	<ol>
+	  <li ng-repeat="step in test.steps">{{ step }}</li>
+	</ol>
 
-    <hr/>
-    <ol>
-      <li ng-repeat="step in test.expected">{{ step }}</li>
-    </ol>
+	<hr/>
+	<ol>
+	  <li ng-repeat="step in test.expected">{{ step }}</li>
+	</ol>
+      </div>
+      <div class="col-xs-4 bugs">
+
+	<div class="input-group">
+	  <input type="text" class="form-control input-sm">
+	  <div class="input-group-btn">
+	    <span uib-dropdown is-open="status.isopen">
+	      <button type="button" class="btn btn-sm btn-primary" uib-dropdown-toggle>
+	    	{{ selected.verbose_name || 'type' }} <span class="caret"></span>
+	      </button>
+
+	      <ul uib-dropdown-menu role="menu" aria-labelledby="single-button" ng-mode=>
+
+	    	<li role="menuitem" ng-repeat="source in issueSources">
+		  <a href="" ng-click="selectIssueKind(source)" >{{ source.verbose_name }}</a>
+		</li>
+	      </ul>
+	    </span>
+
+	    <button type="button" class="btn btn-sm btn-default">
+	      <i class="fa fa-plus-circle"></i>
+	    </button>
+	  </div>
+	</div>
+
+      </div>
+    </div>
   </div>
 </div>
 
 <progress class="bottom" results="data.results"></progress>
-

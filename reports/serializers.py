@@ -40,6 +40,29 @@ class RunDefinition(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at')
 
 
+class Issue(serializers.ModelSerializer):
+    issues = issues.register_issues()
+
+    class Meta:
+        model = models.Issue
+        read_only_fields = ('url', 'title', 'state')
+
+    def validate(self, data):
+
+        if data['kind'] not in self.issues:
+            raise serializers.ValidationError({
+                'kind': "kind '%s' not recognized" % data['kind']})
+
+        issue = self.issues[data['kind']](data['number'])
+        title, state, url = issue()
+
+        data['title'] = title
+        data['state'] = state
+        data['url'] = url
+
+        return data
+
+
 class TestResult(serializers.ModelSerializer):
     datetime_format = "%H:%M:%S %d-%m-%Y.%f"
     modified_by = User(required=False)
@@ -47,6 +70,8 @@ class TestResult(serializers.ModelSerializer):
         required=False,
         format=datetime_format,
         input_formats=[datetime_format])
+
+    issues = Issue(many=True, read_only=True)
 
     class Meta:
         model = models.TestResult
@@ -112,26 +137,3 @@ class TestJobRead(TestJob):
     run_definition = RunDefinition()
     regression = serializers.BooleanField()
     results = TestResult(many=True, source="tests_results")
-
-
-class Issue(serializers.ModelSerializer):
-    issues = issues.register_issues()
-
-    class Meta:
-        model = models.Issue
-        read_only_fields = ('url', 'title', 'state')
-
-    def validate(self, data):
-
-        if data['kind'] not in self.issues:
-            raise serializers.ValidationError({
-                'kind': "kind '%s' not recognized" % data['kind']})
-
-        issue = self.issues[data['kind']](data['number'])
-        title, state, url = issue()
-
-        data['title'] = title
-        data['state'] = state
-        data['url'] = url
-
-        return data

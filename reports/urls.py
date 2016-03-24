@@ -38,6 +38,7 @@ router.register(r'test-execution', views.TestExecution)
 router.register(r'test-job', views.TestJob)
 router.register(r'test-result', views.TestResult)
 router.register(r'issue', views.Issue)
+router.register(r'issue-kind', views.IssueKind, base_name="issue-kind")
 router.register(r'test-manual', views.TestManual, base_name="testmanual")
 
 

@@ -4,12 +4,14 @@ from rest_framework import viewsets
 from rest_framework import response
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import decorators
 
 from django.contrib import auth
 
 from . import models
 from . import serializers
 from . import miner
+from . import issues
 
 
 class User(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -71,6 +73,16 @@ class TestResult(viewsets.ModelViewSet):
 class Issue(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = models.Issue.objects.all()
     serializer_class = serializers.Issue
+
+
+class IssueKind(viewsets.ViewSet):
+
+    issues = issues.register_issues()
+
+    def list(self, request):
+        data = [{"name": a.name, "verbose_name": a.verbose_name}
+                for a in self.issues.values()]
+        return response.Response(data)
 
 
 class TestManual(viewsets.ViewSet):

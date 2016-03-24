@@ -44,16 +44,19 @@ class Bugzilla(BaseIssue):
 
 class Bugzilla96Boards(Bugzilla):
     name = '96boards'
+    verbose_name = "Bugzilla/96boards"
     url = "https://bugs.96boards.org"
 
 
 class BugzillaLinaro(Bugzilla):
     name = 'linaro'
+    verbose_name = "Bugzilla/linaro"
     url = "https://bugs.linaro.org"
 
 
 class Github(BaseIssue):
     name = 'kernelci'
+    verbose_name = "GitHub/kernelci"
     repo = 'kernelci/kernel-bugs'
     url = "https://api.github.com/repos/%s/issues"
 

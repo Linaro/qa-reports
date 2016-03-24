@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.test import override_settings
 
-from rest_framework.test import APITestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from reports import models
 
@@ -274,6 +274,11 @@ class TestIssue(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(models.Issue.objects.count(), 1)
 
+        response = self.client.get('/api/test-result/%s/%s/' %
+                                   (test_result.test_job.pk, test_result.name))
+
+        self.assertEqual(len(response.data['issues']), 1)
+
     def test_create_bad_kind(self):
         test_result = G(models.TestResult, name="test-1")
 
@@ -288,3 +293,21 @@ class TestIssue(APITestCase):
         self.assertTrue('kind' in response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(models.Issue.objects.count(), 0)
+
+
+class TestIssueKind(APITestCase):
+
+    def setUp(self):
+        self.client.force_authenticate(user=G(get_user_model(), is_superuser=True))
+
+    def test_get(self):
+        response = self.client.get('/api/issue-kind/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.data[0],
+                         {'verbose_name': 'GitHub/kernelci', 'name': 'kernelci'})
+        self.assertEqual(response.data[1],
+                         {'verbose_name': 'Bugzilla/linaro', 'name': 'linaro'})
+        self.assertEqual(response.data[2],
+                         {'verbose_name': 'Bugzilla/96boards', 'name': '96boards'})
