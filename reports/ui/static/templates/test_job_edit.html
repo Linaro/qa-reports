@@ -109,7 +109,9 @@
 	  
 	  <ul class="list-group">
 	    <li class="list-group-item" ng-repeat="issue in test.issues">
-	      #{{ issue.number }} {{ issue.title }} {{ issue.status }}
+	      <a ng-href="{{ issue.url }}" target="_blank">
+		#{{ issue.number }} {{ issue.title }} / {{ issue.state }}
+	      </a>
 	      <a ng-show="!issue.delete" href="" class="fa fa-trash"
 		 ng-click="issue.delete = true"></a>
 	      <span ng-show="issue.delete">
