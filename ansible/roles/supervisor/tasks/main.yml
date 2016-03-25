@@ -29,8 +29,8 @@
             group={{apache_user}}
             mode=0755
   with_items:
-    - { src: 'supervisor.celerycam.conf', dest: '{{ inventory_hostname }}.celery_cam.conf' }
-    - { src: 'supervisor.celeryd.conf', dest: '{{ inventory_hostname }}.celery_worker.conf' }
+    - { src: 'supervisor.celerybeat.conf', dest: '{{ inventory_hostname }}.celerybeat.conf' }
+    - { src: 'supervisor.celeryd.conf', dest: '{{ inventory_hostname }}.celeryd.conf' }
 
   tags:
     - install

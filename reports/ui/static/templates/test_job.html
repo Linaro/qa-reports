@@ -26,11 +26,11 @@
       <h4><small>regression:</small> {{ data.regression ? "yes" : "no" }}</h4>
     </div>
 
-    <div class="notes text-right" ng-if="user">
+    <div class="notes text-right" ng-if="user.edit">
       <textarea ng-model="data.notes" class="form-control" ng-blur="saveNotes()"></textarea>
     </div>
 
-    <div class="notes text-right" ng-if="!user">
+    <div class="notes text-right" ng-if="!user.edit">
       <p>{{ data.notes }}</p>
     </div>
 

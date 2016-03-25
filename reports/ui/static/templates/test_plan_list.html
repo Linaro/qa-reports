@@ -4,13 +4,13 @@
   <div class="page-header">
     <h3>
       Test Plans
-      <button ui-sref="testplan-new" class="btn btn-warning pull-right" ng-if="user">
+      <button ui-sref="testplan-new" class="btn btn-warning pull-right" ng-if="user.edit">
 	<i class="fa fa-plus-circle"></i>
       </button>
     </h3>
   </div>
 
-  <table class="table table-striped" ng-class="{'table-hover': user}">
+  <table class="table table-striped" ng-class="{'table-hover': user.edit}">
     <thead>
       <tr>
 	<th>name</th>
@@ -20,13 +20,13 @@
     </thead>
     <tbody>
       
-      <tr ng-if="user" ng-repeat="item in page.results" ui-sref="testplan-detail({id: item.id})">
+      <tr ng-if="user.edit" ng-repeat="item in page.results" ui-sref="testplan-detail({id: item.id})">
 	<td>{{ item.name }}</td>
 	<td class="text-right">{{ item.data.tests.length || 0 }}</td>
 	<td class="text-right">{{ item.test_jobs.length || 0 }}</td>
       </tr>
 
-      <tr ng-if="!user" ng-repeat="item in page.results">
+      <tr ng-if="!user.edit" ng-repeat="item in page.results">
 	<td>{{ item.name }}</td>
 	<td class="text-right">{{ item.data.tests.length || 0 }}</td>
 	<td class="text-right">{{ item.test_jobs.length || 0 }}</td>

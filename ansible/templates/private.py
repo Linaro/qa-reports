@@ -50,7 +50,7 @@ CREDENTIALS = {
 ALLOWED_HOSTS = ['{{ inventory_hostname }}', 'localhost']
 
 ADMINS = [
-    ("Milosz Wasilewski", 'milosz.wasilewski@linaro.org'),
+    # ("Milosz Wasilewski", 'milosz.wasilewski@linaro.org'),
     ("Sebastian Pawlus", 'sebastian.pawlus@linaro.org')
 ]
 
@@ -60,5 +60,57 @@ EXT_REPOSITORY = {
     "manual-test-definitions": {
         "location": "{{ ext_base }}/manual-test-definitions",
         "git": "https://git.linaro.org/qa/manual-test-definitions.git"
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'include_html': True,
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': '{{logs_base}}/django.log',
+            'backupCount': 5,
+            'when': 'midnight',
+            'encoding': 'utf8',
+            'formatter': 'verbose',
+
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'tasks': {
+            'handlers': ['mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     }
 }

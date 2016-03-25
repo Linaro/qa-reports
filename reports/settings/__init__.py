@@ -93,22 +93,20 @@ REST_FRAMEWORK = {
 }
 
 KERNELCI_TOKEN = None
-
-CELERY_ACCEPT_CONTENT = ['json', 'pickle']
-BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = 'django://'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_ACCEPT_CONTENT = ['json', 'pickle']
+CELERYBEAT_SCHEDULE_FILENAME = "/tmp/celery-beat"
 CELERY_TIMEZONE = 'UTC'
-CELERYD_HIJACK_ROOT_LOGGER = False
 
 CELERYD_LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
 CELERYD_TASK_LOG_FORMAT = '[%(asctime)s] %(levelname)s %(task_name)s: %(message)s'
 
 CELERYBEAT_SCHEDULE = {
-    'Pull kernelCI': {
+    'Pull KernelCI': {
         'task': 'reports.tasks.kernelci_pull',
         'schedule': crontab(minute='*/20')
     },
-
     'Deploy TestJobs': {
         'task': 'reports.tasks.testjob_submit',
         'schedule': crontab(minute='*/5')
@@ -174,4 +172,4 @@ DDF_FIELD_FIXTURES = {
 }
 
 ACCESS_GROUP = 'linaro-lava-access'
-EDIT_GROUP = 'linaro-lava-edit'
+EDIT_GROUP = 'team-qa-services'
