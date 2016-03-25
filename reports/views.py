@@ -41,7 +41,8 @@ class TestExecution(viewsets.ReadOnlyModelViewSet):
 class TestJob(viewsets.ModelViewSet):
     queryset = (models.TestJob.objects
                 .select_related('test_execution', 'run_definition', 'run_definition__definition')
-                .prefetch_related('tests_results'))
+                .prefetch_related('tests_results')
+                .prefetch_related('tests_results__issues'))
     serializer_class = serializers.TestJob
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
     search_fields = ('id', 'status', 'kind', 'test_execution__build_id', 'test_execution__board')
