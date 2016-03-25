@@ -13,6 +13,9 @@ app.factory('API', function($http) {
         },
         patch: function(name, data) {
             return $http.patch('/api/'+ name +'/', data);
+        },
+        delete: function(name, params) {
+            return $http.delete('/api/'+ name +'/', {params: params});
         }
     };
 });
@@ -177,7 +180,29 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
     });
 
     $scope.selectIssueKind = function(source) {
-        $scope.selected = source;
+        $scope.selectedSource = source;
+        $scope.issue.kind = $scope.selectedSource.name;
+    };
+
+    $scope.issue = {};
+
+    $scope.submitIssue = function(test) {
+        $scope.issue.test_result = test.id;
+        API.post('issue', $scope.issue).then(function(data) {
+            API.get("test-result/" + $state.params.id + '/' + test.name)
+                .success(function(data) {
+                    test.issues = data.issues;
+            });
+        });
+    };
+
+    $scope.removeIssue = function(test, issue) {
+        API.delete('issue/'+issue.id).then(function(data) {
+            API.get("test-result/" + $state.params.id + '/' + test.name)
+                .success(function(data) {
+                    test.issues = data.issues;
+            });
+        });
     };
 
     $scope.cssStatusClass = function(test) {
@@ -200,7 +225,6 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
                 angular.copy(data, test);
             });
     };
-
 
     $scope.setStatus = function(test, status) {
         var data = {

@@ -218,29 +218,59 @@ table.table-hover {
 		}
 	}
 
-	.panel {
-		margin-bottom: 0;
-		.panel-heading {
-			padding: 0px 0px 0px 10px;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			.toggle {
-				cursor: pointer;
-			}
-			.conflict {
-				.text {
-					font-size: 12px;
-					padding: 0 7px;
+	.test-list {
+		.test-item {
+			.header {
+				display: flex;
+				justify-content: space-between;
+				border-bottom: 1px solid #ccc;
+				.title {
+					line-height: 2.4;
+					cursor: pointer;
+					&:hover {
+						color: #555;
+					}
 				}
-				background: red;
-				height: 35px;
 			}
-		}
-		.panel-body {
-		   	font-family: 'Inconsolata';
-			li {
-				margin-bottom: 8px;
+			.details {
+				display: flex;
+				justify-content: space-between;
+				border-bottom: 1px solid #ccc;
+				background: #f2f2f2;
+				.steps {
+					width: 70%;
+					padding: 20px 10px 15px 0px;
+					font-family: 'Inconsolata';
+					font-size: 14px;
+					li {
+						margin-bottom: 10px;
+					}
+				}
+				.bugs {
+					width: 30%;
+					background: red;
+					background: #e6e6e6;
+					.input-group {
+						border-bottom: 1px solid #ccc;
+						input {
+							line-height: 1.5;
+							border: none;
+							border-left: 1px solid #ccc;
+						}
+						.btn {
+							border: none;
+						}
+					}
+					.list-group {
+						li:first-of-type {
+							border-top: none;
+						}
+						.list-group-item {
+							/* display: flex; */
+							/* justify-content: space-between; */
+						}
+					}
+				}
 			}
 		}
 	}

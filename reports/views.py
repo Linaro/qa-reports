@@ -58,20 +58,22 @@ class TestJob(viewsets.ModelViewSet):
 
 
 class TestResult(viewsets.ModelViewSet):
-    queryset = models.TestResult.objects.select_related('test_job')
+    queryset = (models.TestResult.objects
+                .select_related('test_job')
+                .prefetch_related('issues'))
     lookup_field = ('test_job', 'name')
     lookup_value_regex = ('[^/.]+', '.+')
     serializer_class = serializers.TestResult
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = generics.get_object_or_404(queryset, test_job__id=self.kwargs['test_job'],
+        obj = generics.get_object_or_404(queryset,
+                                         test_job__id=self.kwargs['test_job'],
                                          name=self.kwargs['name'])
-
         return obj
 
 
-class Issue(mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class Issue(viewsets.ModelViewSet):
     queryset = models.Issue.objects.all()
     serializer_class = serializers.Issue
 
