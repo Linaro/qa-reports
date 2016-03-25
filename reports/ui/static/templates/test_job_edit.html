@@ -96,16 +96,22 @@
 		  </li>
 		</ul>
 	      </span>
-	      <button type="submit" class="btn btn-sm btn-default">
+	      <button type="submit" ng-disabled="!issue.number || !issue.kind"
+		      class="btn btn-sm btn-default">
 		<i class="fa fa-plus-circle"></i>
 	      </button>
 	    </div>
 	  </div>
 
+	  <p ng-show="test.errors" class="bg-warning">
+	    {{ test.errors }}
+	  </p>
+	  
 	  <ul class="list-group">
 	    <li class="list-group-item" ng-repeat="issue in test.issues">
 	      #{{ issue.number }} {{ issue.title }} {{ issue.status }}
-	      <a ng-show="!issue.delete" href="" class="fa fa-trash" ng-click="issue.delete = true"></a>
+	      <a ng-show="!issue.delete" href="" class="fa fa-trash"
+		 ng-click="issue.delete = true"></a>
 	      <span ng-show="issue.delete">
 		<a href="" class="fa fa-times" ng-click="issue.delete = false"></a>
 		<a href="" class="fa fa-check" ng-click="removeIssue(test, issue)"></a>

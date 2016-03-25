@@ -47,18 +47,24 @@ class Issue(serializers.ModelSerializer):
         model = models.Issue
         read_only_fields = ('url', 'title', 'state')
 
-    def validate(self, data):
+    @property
+    def errors(self):
+        return {k: v[0] for k, v in super(Issue, self).errors.items()}
 
+    def validate(self, data):
         if data['kind'] not in self.issues:
             raise serializers.ValidationError({
                 'kind': "kind '%s' not recognized" % data['kind']})
 
-        issue = self.issues[data['kind']](data['number'])
-        title, state, url = issue()
+        issue_source = self.issues[data['kind']](data['number'])
+        issue_data = issue_source()
+        if not issue_data:
+            raise serializers.ValidationError(
+                "Issue '%s' not found on '%s'" % (
+                    data['number'], issue_source.verbose_name)
+            )
 
-        data['title'] = title
-        data['state'] = state
-        data['url'] = url
+        data['title'], data['state'], data['url'] = issue_data
 
         return data
 

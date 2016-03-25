@@ -29,7 +29,6 @@ class Bugzilla(BaseIssue):
     def __call__(self):
         url = "%s/rest/bug/%s" % (self.url, self.remote_id)
         auth = self.get_auth(url)
-
         response = requests.get(url, auth=auth)
 
         if response.status_code == 200:
@@ -38,6 +37,8 @@ class Bugzilla(BaseIssue):
                     data['bugs'][0]['status'],
                     '%s/show_bug.cgi?id=%s' % (self.url, self.remote_id))
         if response.status_code == 404:
+            return None
+        if response.status_code == 401:
             return None
         response.raise_for_status()
 
@@ -63,12 +64,13 @@ class Github(BaseIssue):
     def __call__(self):
         url = "%s/%s" % (self.url % self.repo, self.remote_id)
         auth = self.get_auth(url)
-
         response = requests.get(url, auth=auth)
 
         if response.status_code == 200:
             data = response.json()
             return (data['title'], data['state'], data['html_url'])
         if response.status_code == 404:
+            return None
+        if response.status_code == 401:
             return None
         response.raise_for_status()

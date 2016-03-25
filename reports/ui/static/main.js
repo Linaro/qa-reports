@@ -187,12 +187,15 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
     $scope.issue = {};
 
     $scope.submitIssue = function(test) {
+        test.errors = null;
         $scope.issue.test_result = test.id;
-        API.post('issue', $scope.issue).then(function(data) {
+        API.post('issue', $scope.issue).success(function() {
             API.get("test-result/" + $state.params.id + '/' + test.name)
                 .success(function(data) {
                     test.issues = data.issues;
             });
+        }).error(function(data) {
+            test.errors = _.values(data).join(",");
         });
     };
 

@@ -220,3 +220,9 @@ class Issue(models.Model):
     title = models.CharField(max_length=512)
     state = models.CharField(max_length=256)
     url = models.URLField()
+
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ('test_result', 'kind', 'number')
