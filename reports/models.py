@@ -148,6 +148,7 @@ class TestResult(models.Model):
     data = JSONField(null=True)
     regression = models.BooleanField(default=False)
 
+    notes = models.TextField(blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_at = models.DateTimeField(auto_now=True)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL,

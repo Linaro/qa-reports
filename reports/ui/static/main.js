@@ -219,6 +219,10 @@ app.controller('TestJobEdit', function($state, $stateParams, $scope, API, $q) {
         return '';
     };
 
+    $scope.saveNotes = function(test) {
+        API.patch("test-result/"+$state.params.id+'/'+test.name, {notes: test.notes});
+    };
+
     $scope.forceSetStatus = function(test, status) {
         var data = {
             status: test.status === status ? null : status

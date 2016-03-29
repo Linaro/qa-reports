@@ -251,6 +251,17 @@ class TestResult(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_update_notes(self):
+        test_result = G(models.TestResult, name="test_name")
+
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+        data = {'notes': 'a text'}
+        self.client.force_authenticate(user=self.user_1)
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(models.TestResult.objects.get().notes, data['notes'])
+
 
 class TestIssue(APITestCase):
 
