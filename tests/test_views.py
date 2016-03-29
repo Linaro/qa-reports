@@ -168,6 +168,23 @@ class TestResult(APITestCase):
         self.assertEqual(test_result.modified_by, self.user_1)
 
     def test_update_2(self):
+        test_result = G(models.TestResult, name="things/with/urls.yaml")
+        url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)
+
+        data = {'status': None}
+
+        self.client.force_authenticate(user=self.user_1)
+
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        test_result = models.TestResult.objects.get()
+
+        self.assertEqual(test_result.status, None)
+        self.assertEqual(test_result.modified_by, None)
+
+    def test_update_3(self):
         original_name = "things/with/urls.yaml"
         test_result = G(models.TestResult, name=original_name)
         url = '/api/test-result/%s/%s/' % (test_result.test_job.id, test_result.name)

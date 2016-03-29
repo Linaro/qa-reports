@@ -105,7 +105,10 @@ class TestResult(serializers.ModelSerializer):
         return data
 
     def validate(self, data):
-        data['modified_by'] = self.context['request'].user
+        if data.get('status'):
+            data['modified_by'] = self.context['request'].user
+        else:
+            data['modified_by'] = None
 
         if self.instance.modified_by == data['modified_by']:
             return data
