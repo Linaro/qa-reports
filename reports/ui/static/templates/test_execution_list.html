@@ -18,10 +18,8 @@
       <tr>
 	<th>build</th>
 	<th>board</th>
-	<th>tree</th>
-	<th>branch</th>
-	<th>kernel</th>
-	<th>defconfig</th>
+	<th>tree / branch</th>
+	<th>kernel / defconfig</th>
 	<th>arch.</th>
 	<th class="text-right">tests</th>
 	<th class="text-right">date</th>
@@ -31,10 +29,12 @@
       <tr ng-repeat="item in page.results" ui-sref="detail({id: item.id})">
 	<td>{{ item.build_id }}</td>
 	<td>{{ item.board }}</td>
-	<td>{{ item.tree }}</td>
-	<td ui-sref="detail({id: item.id})">{{ item.branch }}</td>
-	<td ui-sref="detail({id: item.id})">{{ item.kernel }}</td>
-	<td ui-sref="detail({id: item.id})">{{ item.defconfig }}</td>
+	<td ui-sref="detail({id: item.id})">
+	  {{ item.tree }} <br> {{ item.branch }}
+	</td>
+	<td ui-sref="detail({id: item.id})">
+	  {{ item.kernel }} <br> {{ item.defconfig }}
+	</td>
 	<td ui-sref="detail({id: item.id})">{{ item.arch }}</td>
 	<th ui-sref="detail({id: item.id})" class="text-right">{{ item.test_jobs.length }}</th>
 	<td ui-sref="detail({id: item.id})" class="text-right">{{ item.created_at }}</td>
