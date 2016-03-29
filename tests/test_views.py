@@ -285,28 +285,6 @@ class TestIssue(APITestCase):
     def setUp(self):
         self.client.force_authenticate(user=G(get_user_model(), is_superuser=True))
 
-    def test_create(self):
-        test_result = G(models.TestResult, name="test-1")
-
-        data = {
-            'kind': 'kernelci',
-            "number": "12",
-            "test_result": test_result.id
-        }
-
-        response = self.client.post('/api/issue/', data, format='json')
-
-        self.assertNotEqual(response.data['state'], '')
-        self.assertNotEqual(response.data['url'], '')
-        self.assertNotEqual(response.data['title'], '')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.Issue.objects.count(), 1)
-
-        response = self.client.get('/api/test-result/%s/%s/' %
-                                   (test_result.test_job.pk, test_result.name))
-
-        self.assertEqual(len(response.data['issues']), 1)
-
     def test_create_bad_kind(self):
         test_result = G(models.TestResult, name="test-1")
 
