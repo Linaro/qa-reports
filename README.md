@@ -109,3 +109,11 @@ python manage.py runserver 0.0.0.0:8000
 ```
 python manage.py test
 ```
+
+### deploy
+
+#### staging
+ansible-playbook ansible/site.yml -i ansible/hosts -l staging-qa-reports.linaro.org -u {{SSH_USER}} --ask-become-pass -e branch=master
+
+#### production
+ansible-playbook ansible/site.yml -i ansible/hosts -l qa-reports.linaro.org -u {{SSH_USER}} --ask-become-pass -e branch=master
