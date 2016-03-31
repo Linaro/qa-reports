@@ -27,4 +27,5 @@ notifications:
     on_success: change
     on_failure: change
   irc:
-    - "chat.freenode.net#linaro-qa"
+    channels: "chat.freenode.net#linaro-qa"
+    template: "%{repository}@%{branch}: %{message} (%{build_url})"
