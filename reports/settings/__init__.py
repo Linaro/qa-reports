@@ -112,7 +112,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'Deploy TestJobs': {
         'task': 'reports.tasks.testjob_submit',
-        'schedule': crontab(minute='*/5')
+        'schedule': crontab(minute='*/10')
     },
     'Check TestJobs': {
         'task': 'reports.tasks.testjob_check',
@@ -120,7 +120,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'Check TestJobs from KernelCI': {
         'task': 'reports.tasks.testjob_kernelci_check',
-        'schedule': crontab(minute='*/10')
+        'schedule': crontab(minute='*/20')
     },
 }
 
