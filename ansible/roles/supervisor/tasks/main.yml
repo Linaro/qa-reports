@@ -12,7 +12,7 @@
         state=directory
 
 - name: copy supervisord.conf
-  become_user: "{{ apache_user }}"
+  sudo_user: "{{ apache_user }}"
   template: src=templates/supervisord.conf
             dest={{ supervisor_config }}
             owner={{ apache_user }} group={{ apache_user }} mode=0755
@@ -22,7 +22,7 @@
     - celery
 
 - name: copy supervisor service files
-  become_user: "{{ apache_user }}"
+  sudo_user: "{{ apache_user }}"
   template: src="templates/{{ item.src }}"
             dest="{{ supervisor_base }}/{{item.dest}}"
             owner={{apache_user}}
@@ -45,7 +45,7 @@
 
 - name: running supervisord
   shell: "supervisord -c {{ supervisor_config }}"
-  become_user: "{{ apache_user }}"
+  sudo_user: "{{ apache_user }}"
   when: supervisor_running|failed
   tags:
     - install
@@ -54,9 +54,9 @@
 
 - name: supervisor restart
   shell: "supervisorctl -c {{ supervisor_config }} restart all"
-  become_user: "{{ apache_user }}"
+  sudo_user: "{{ apache_user }}"
 
 - name: supervisor update
   shell: "supervisorctl -c {{ supervisor_config }} update"
-  become_user: "{{ apache_user }}"
+  sudo_user: "{{ apache_user }}"
 
