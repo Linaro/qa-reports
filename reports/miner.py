@@ -26,7 +26,10 @@ class automatic(object):
                                      json.dumps(self.test_job.run_definition.definition.data))
 
     def freeze(self):
-        # fixme, this should be a template
+        # fixme, maybe this should be a template
+        parameters = self.test_job.run_definition.definition.data['actions'][0]['parameters']
+        parameters['dtb'] = self.test_job.test_execution.dtb_url
+        parameters['kernel'] = self.test_job.test_execution.image_url
         return self.test_job.run_definition.definition.data
 
     def create_results(self):
