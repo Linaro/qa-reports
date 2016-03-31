@@ -26,6 +26,7 @@ def _get_suits(build_id):
     return [(a['_id']['$oid'], a['board']) for a in suits]
 
 
+@celery_app.task(bind=True)
 def kernelci_pull():
 
     def created_on(r):

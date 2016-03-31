@@ -105,17 +105,18 @@ CELERY_TIMEZONE = 'UTC'
 CELERYD_LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
 CELERYD_TASK_LOG_FORMAT = '[%(asctime)s] %(levelname)s %(task_name)s: %(message)s'
 
+
 CELERYBEAT_SCHEDULE = {
     'Pull KernelCI': {
         'task': 'reports.tasks.kernelci_pull',
         'schedule': crontab(minute='*/20')
     },
     'Deploy TestJobs': {
-        'task': 'reports.tasks.testjob_submit',
+        'task': 'reports.tasks.testjob_automatic_create',
         'schedule': crontab(minute='*/10')
     },
     'Check TestJobs': {
-        'task': 'reports.tasks.testjob_check',
+        'task': 'reports.tasks.testjob_automatic_check',
         'schedule': crontab(minute='*/5')
     },
     'Check TestJobs from KernelCI': {
