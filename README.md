@@ -113,7 +113,19 @@ python manage.py test
 ### deploy
 
 #### staging
+
+```
 ansible-playbook ansible/site.yml -i ansible/hosts -l staging-qa-reports.linaro.org -u {{SSH_USER}} --ask-become-pass -e branch=master
+```
 
 #### production
+
+```
 ansible-playbook ansible/site.yml -i ansible/hosts -l qa-reports.linaro.org -u {{SSH_USER}} --ask-become-pass -e branch=master
+```
+
+### supervisor
+
+```
+sudo -u www-data supervisorctl -c /srv/supervisor/config.conf
+```
