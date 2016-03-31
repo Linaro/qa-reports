@@ -9,6 +9,7 @@
 
   roles:
     - base
+    - rabbitmq
     - postgres
     - apache
     - project
