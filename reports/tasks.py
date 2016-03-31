@@ -70,7 +70,7 @@ def kernelci_pull(self):
                                       build['dirname'].replace(dir, ""),
                                       build['kernel_image'])
 
-            trace_execution = TestExecution.objects.create(
+            test_execution = TestExecution.objects.create(
                 build_id=build_id,
                 board=board,
                 tree=tree,
