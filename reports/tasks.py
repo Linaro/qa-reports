@@ -27,7 +27,7 @@ def _get_suits(build_id):
 
 
 @celery_app.task(bind=True)
-def kernelci_pull():
+def kernelci_pull(self):
 
     def created_on(r):
         return datetime.fromtimestamp(
@@ -66,6 +66,7 @@ def kernelci_pull():
             kernel = build['kernel']
             defconfig = build['defconfig']
             arch = build['arch']
+            # todo: dodac dtb, kernel-image
 
             test_execution = TestExecution.objects.create(
                 build_id=build_id,
@@ -83,6 +84,7 @@ def kernelci_pull():
 
 @celery_app.task(bind=True)
 def testjob_automatic_create(self):
+    # dodaj template
     definition = Definition.objects.get(kind=Definition.AUTOMATIC)  # lava
     to_deploy = (TestExecution.objects
                  .filter(executable=True)
