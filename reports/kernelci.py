@@ -6,7 +6,7 @@ from django.conf import settings
 headers = {"Authorization": settings.KERNELCI_TOKEN}
 
 defaults = {
-    "limit": 10000,
+    "limit": 50000,
     "sort_order": -1,
     "sort": "created_on"
 }

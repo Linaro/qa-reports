@@ -12,12 +12,14 @@ from .miner import miner
 class TestExecution(models.Model):
     build_id = models.CharField(max_length=24)
     board = models.CharField(max_length=256, null=True)
-
     tree = models.CharField(max_length=256)
     branch = models.CharField(max_length=256)
     kernel = models.CharField(max_length=256)
     defconfig = models.CharField(max_length=256)
     arch = models.CharField(max_length=256)
+
+    dtb_url = models.CharField(max_length=512, null=True)
+    image_url = models.CharField(max_length=512, null=True)
 
     created_at = models.DateTimeField(default=timezone.now)
 

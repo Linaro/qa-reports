@@ -17,13 +17,10 @@ logger = logging.getLogger("tasks")
 def _get_boots(build_id):
     boots = kernelci("boots", build_id=build_id)['result']
     if all([b['status'] == 'PASS' for b in boots]):
-        return [(a['_id']['$oid'], a['board']) for a in boots]
+        if boots:
+            pass
+        return [(a['_id']['$oid'], a['board'], a['dtb']) for a in boots]
     return []
-
-
-def _get_suits(build_id):
-    suits = kernelci("test/suite", build_id=build_id)['result']
-    return [(a['_id']['$oid'], a['board']) for a in suits]
 
 
 @celery_app.task(bind=True)
@@ -33,20 +30,15 @@ def kernelci_pull(self):
         return datetime.fromtimestamp(
             r['created_on']['$date'] / 1000, pytz.UTC)
 
-    then = datetime.now(pytz.UTC) - timedelta(hours=1)
+    then = datetime.now(pytz.UTC) - timedelta(hours=5)
     results = kernelci("build", date_range=1)['result']
     results = [r for r in results if created_on(r) > then]
 
     for build in results:
-
         build_id = build['_id']['$oid']
+        items = _get_boots(build_id)
 
-        boots = _get_boots(build_id)
-        suits = _get_suits(build_id)
-
-        items = list(set(boots + suits))
-
-        for build_id, board in items:
+        for build_id, board, dtb in items:
             try:
                 test_execution = TestExecution.objects.get(
                     build_id=build_id,
@@ -66,9 +58,19 @@ def kernelci_pull(self):
             kernel = build['kernel']
             defconfig = build['defconfig']
             arch = build['arch']
-            # todo: dodac dtb, kernel-image
 
-            test_execution = TestExecution.objects.create(
+            dir = "/var/www/images/kernel-ci/"
+            storage = "https://storage.kernelci.org"
+
+            dtb_url = "%s/%s/%s" % (storage,
+                                    build['dirname'].replace(dir, ""),
+                                    dtb)
+
+            image_url = "%s/%s/%s" % (storage,
+                                      build['dirname'].replace(dir, ""),
+                                      build['kernel_image'])
+
+            trace_execution = TestExecution.objects.create(
                 build_id=build_id,
                 board=board,
                 tree=tree,
@@ -76,6 +78,10 @@ def kernelci_pull(self):
                 kernel=kernel,
                 defconfig=defconfig,
                 arch=arch,
+
+                dtb_url=dtb_url,
+                image_url=image_url,
+
                 created_at=created_at
             )
 
