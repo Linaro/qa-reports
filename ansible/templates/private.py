@@ -7,6 +7,7 @@ AUTH_CROWD_APPLICATION_USER = '{{crowd_user}}'
 AUTH_CROWD_APPLICATION_PASSWORD = '{{crowd_pass}}'
 AUTH_CROWD_SERVER_REST_URI = '{{crowd_rest_uri}}'
 
+BROKER_URL = 'amqp://guest:guest@localhost:5672/{{ inventory_hostname }}'
 
 KERNELCI_TOKEN = "{{ kernelci_token }}"
 SECRET_KEY = "{{ secret_key }}"

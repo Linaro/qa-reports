@@ -93,8 +93,11 @@ REST_FRAMEWORK = {
 }
 
 KERNELCI_TOKEN = None
-BROKER_URL = 'django://'
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+# Celery settings
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'rpc://'
+
+CELERY_RESULT_PERSISTENT = False
 CELERY_ACCEPT_CONTENT = ['json', 'pickle']
 CELERYBEAT_SCHEDULE_FILENAME = "/tmp/celery-beat"
 CELERY_TIMEZONE = 'UTC'
