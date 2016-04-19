@@ -24,7 +24,7 @@
 - name: copy supervisor service files
   sudo_user: "{{ apache_user }}"
   template: src="templates/{{ item.src }}"
-            dest="{{ supervisor_base }}/{{item.dest}}"
+            dest="{{ supervisor_config_dir }}/{{item.dest}}"
             owner={{apache_user}}
             group={{apache_user}}
             mode=0755

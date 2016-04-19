@@ -17,4 +17,5 @@ ssl_cert: /etc/ssl/certs/wildcard.linaro.org.crt
 ssl_ca: /etc/ssl/certs/gd_bundle-g2-g1.pem
 
 supervisor_base: "/srv/supervisor"
-supervisor_config: "{{ supervisor_base }}/config.conf"
+supervisor_config: "{{ supervisor_base }}/supervisord.conf"
+supervisor_config_dir: "{{ supervisor_base }}/supervisor.conf.d"
