@@ -3,13 +3,16 @@
   tags:
     - install
     - update
-    
+
 - name: supervisor directories
-  file: path={{ supervisor_base }}
+  file: path={{ item }}
         owner={{apache_user}}
         group={{apache_user}}
         mode=0755
         state=directory
+  with_items:
+    - '{{ supervisor_base }}'
+    - '{{ supervisor_config_dir }}'
 
 - name: copy supervisord.conf
   sudo_user: "{{ apache_user }}"
