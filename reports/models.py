@@ -34,7 +34,10 @@ class TestExecution(models.Model):
         # fixme: right now we are testing only this "board"
         # this will change in future
 
-        return self.board == "am335x-boneblack"
+        if self.tree == "next" and \
+                self.board in ["am335x-boneblack", "exynos5250-arndale", "apm-mustang", "juno"]:
+            return True
+        return False
 
     def save(self, *args, **kwargs):
         self.executable = self._is_executable()
@@ -133,6 +136,8 @@ class TestJob(models.Model):
         new = not self.id or kwargs.get('force_insert', False)
         if not self.id and new:
             self.id = miner(self).id()
+            self.test_execution.submited = True
+            self.test_execution.save()
         super(TestJob, self).save(*args, **kwargs)
         if new:
             miner(self).create_results()

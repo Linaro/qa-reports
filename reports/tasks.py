@@ -90,20 +90,21 @@ def kernelci_pull(self):
 
 @celery_app.task(bind=True)
 def testjob_automatic_create(self):
-    # dodaj template
-    definition = Definition.objects.get(kind=Definition.AUTOMATIC)  # lava
     to_deploy = (TestExecution.objects
-                 .filter(executable=True)
-                 .exclude(test_jobs__run_definition__definition=definition))
+                 .filter(executable=True, submited=False))
 
     for test_execution in to_deploy:
-        definition = Definition.objects.get(kind=Definition.AUTOMATIC)
-        test_job = TestJob.objects.create(
-            definition=definition,
-            test_execution=test_execution
-        )
+        definitions = Definition.objects.filter(
+                kind=Definition.AUTOMATIC,
+                # template name needs to be the same as board name from kernelci
+                name=test_execution.board)
+        for definition in definitions:
+            test_job = TestJob.objects.create(
+                definition=definition,
+                test_execution=test_execution
+            )
 
-        logger.info("TestJob %s, for %s deployed" % (test_job, test_execution))
+            logger.info("TestJob %s, for %s deployed" % (test_job, test_execution))
 
 
 @celery_app.task(bind=True)
